@@ -1,0 +1,9 @@
+4.1 - Subsistema de lectura y decodificación de código de Gray
+
+C.Gray a Binary:
+https://www.youtube.com/watch?v=-qMm9hhvp9Y
+
+Capturar entrada de código Gray y el sistema lo traduce y envía a subsistema (Primer Bloque, resto de 4.1):
+https://vlsiverify.com/verilog/verilog-codes/gray-to-binary/#google_vignette
+
+4.2 - Subsistema de despliegue de código ingresado traducido a binario en luces led.
