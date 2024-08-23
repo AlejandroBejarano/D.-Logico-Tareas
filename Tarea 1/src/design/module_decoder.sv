@@ -25,7 +25,10 @@ module binary_leds (
 
  end module
 
-module binary_to_7seg (
+
+
+//Revisar Pong Chu FPGA, pag.68  , para hex_to_seven_seg
+module binary_to_sevenseg (
    input logic bit3, bit2, bit1, bit0,
    output logic a, b, c, d, e, f, g
 );
