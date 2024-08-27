@@ -2,25 +2,19 @@
 // Modulo de conexion
 
 module principal (
-   input logic g3, g2, g1, g0,
+   input logic [3:0] GrayCode,
 
    output logic led3, led2, led1, led0
    //Anadir mas salidas, como la del 7-segmentos
 
 );
 
-logic bit3, bit2, bit1, bit0;
+logic [3:0]bit;
 
    //Instancia
    gray_to_binary g_to_b_inst (
-      .g3(g3),
-      .g2(g2),
-      .g1(g1),
-      .g0(g0),
-      .bit3(b3),
-      .bit2(b2),
-      .bit1(b1),
-      .bit0(b0)
+      .Gray(GrayCode),
+      .bin(bit)
       
    );
 
@@ -42,15 +36,18 @@ endmodule
 //4.1
 
  module gray_to_binary (
-    input logic g3, g2, g1, g0,
-    output logic b3,b2,b1,b0   
+    input logic [3:0] Gray,
+    output logic [3:0] bin;   
  );
+
+   logic b3, b2, b1, b0;
+
    assign b3 = g3;
    assign b2 = b3 ^ g2;
    assign b1 = b2 ^ g1;
    assign b0 = b1 ^ g0;
 
-   assign bin = {b3,b2,b1,b0};         //Cambiar esto
+   assign bin = {b3,b2,b1,b0};
 
  endmodule
 
@@ -59,10 +56,13 @@ endmodule
 
 //Con una instancia toma los valores de los bits para los Leds.
 module binary_leds (
-    input logic b3, b2, b1, b0,
-    output logic led3, led2, led1, led0
+    input logic [3:0]bin,
+    output logic [3:0] Led
 
  );
+
+   logic bit3, bit2, bit1, bit1;
+
    assign bit3 = led3;
    assign bit2 = led2;
    assign bit1 = led1;
