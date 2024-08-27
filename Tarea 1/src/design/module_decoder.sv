@@ -9,7 +9,7 @@ module principal (
 
 );
 
-   logic bit3, bit2, bit1, bit0;
+logic bit3, bit2, bit1, bit0;
 
    //Instancia
    gray_to_binary g_to_b_inst (
@@ -49,7 +49,9 @@ endmodule
    assign b2 = b3 ^ g2;
    assign b1 = b2 ^ g1;
    assign b0 = b1 ^ g0;
-    
+
+   assign bin = {b3,b2,b1,b0};         //Cambiar esto
+
  endmodule
 
 
@@ -72,22 +74,11 @@ module binary_leds (
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 //4.3
 
 module binary_to_hexadecimal (
    input logic ,
-   ouput logic ,
+   ouput logic 
 );
 
 endmodule
@@ -125,3 +116,9 @@ module control_button(
 
 );
 endmodule
+
+
+
+
+
+
