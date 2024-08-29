@@ -3,12 +3,19 @@
 module principal (
 
    input logic [3:0] GrayCode,
-   input logic btn_in,       
+   input logic btn_in, 
+   input logic btn1_in,  // boton del transistor de las decenas
+   input logic btn2_in, // boton el transistor de las unidades
    
-   output logic led3, led2, led1, led0,
-   output logic a, b, c, d, e, f, g,  // Salidas para el 7 segmentos uniades
+   output logic transistor_decenas
+   output logic transistor_unidades 
+   output logic led3, led2, led1, led0
+   output logic a, b, c, d, e, f, g  // Salidas para el 7 segmentos uniades
    output logic ad, bd, cd, dd, ed, fd, gd  // Salidas para el 7 segmentos de decenas
 );
+
+assign transistor_decenas = btn1_in;
+assign transistor_unidades = btn1;
 
 logic [3:0] bit;
 
@@ -78,13 +85,13 @@ module decodificador_siete (
    output logic a, b, c, d, e, f, g
 );
 
-   assign a = (~led1 & ~led3) | (led1 & led3) | led2 | led0;
-   assign b = (~led0 & ~led1) | (~led3) | (led0 & led1);
-   assign c = (~led0) | (led3) | (led1);
-   assign d = (~led1 & ~led3) | (~led0 & led1 & led3) | (led0 & ~led1) | (led0 & ~led3);
-   assign e = (~led1 & ~led3) | (led0 & ~led1);
-   assign f = (~led0 & ~led1) | (~led0 & led3) | led2 | (~led1 & led3);
-   assign g = led2 | (~led0 & led3) | (led0 & ~led3) | (~led1 & led3);
+   assign a = (~bin[1] & ~bin[3]) | (bin[1] & bin[3]) | bin[2] | bin[0];
+   assign b = (~bin[0] & ~bin[1]) | (~bin[3]) | (bin[0] & bin[1]);
+   assign c = (~bin[0]) | (bin[3]) | (bin[1]);
+   assign d = (~bin[1] & ~bin[3]) | (~bin[0] & bin[1] & bin[3]) | (bin[0] & ~bin[1]) | (bin[0] & ~bin[3]);
+   assign e = (~bin[1] & ~bin[3]) | (bin[0] & ~bin[1]);
+   assign f = (~bin[0] & ~bin[1]) | (~bin[0] & bin[3]) | bin[2] | (~bin[1] & bin[3]);
+   assign g = bin[2] | (~bin[0] & bin[3]) | (bin[0] & ~bin[3]) | (~bin[1] & bin[3]);
 
 endmodule
 
