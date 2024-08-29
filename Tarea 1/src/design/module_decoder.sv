@@ -1,40 +1,48 @@
 
 // Modulo de conexion
-/*
+
 module principal (
-
-   input logic [3:0] GrayCode,
-   input logic btn_in;
-
-   output logic led3, led2, led1, led0
-   output logic a, b, c, d, e, f   //Anadir salidas, como la del 7-segmentos
-   output logic ad, bd, cd, dd, ed, fd 
-  
+   input logic [3:0] Gray,
+   input logic [3:0] bin,
+   input logic btn_in, 
+   output logic [3:0] Led,
+   output logic pin_uni,
+   output logic pin_dec,
+   output logic a, b, c, d, e, f, g,  // Salidas para el 7 segmentos uniades
+   output logic ad, bd, cd, dd, ed, fd, gd  // Salidas para el 7 segmentos de decenas
 );
 
-   logic [3:0]bit;
+logic [3:0] bin_todos;
 
-   //Instancia
-   gray_to_binary g_to_b_inst (
-      .Gray(GrayCode),
-      .bin(bit)
-      
-   );
+// Instancia
+gray_to_binary g_to_b_inst (
+   .Gray(Gray),
+   .bin(bin_todos)
+);
 
-   //Instancia
-   binary_leds b_to_l_inst (
-      .bit3(b3),
-      .bit2(b2),
-      .bit1(b1),
-      .bit0(b0),
-      .led3(led3),
-      .led2(led2),
-      .led1(led1),
-      .led0(led0)
-   );
+// Instancia
+binary_leds b_to_l_inst (
+   .bin(bin_todos),
+   .Led(Led)
+);
+
+assign pin_uni = btn_in ? 1'b0 : 1'b1;
+assign pin_dec = btn_in ? 1'b1 : 1'b0;
+
+
+decodificador_siete decodificador_unidades_inst (
+   .bin(bin_todos),
+   .a(a), .b(b), .c(c), .d(d), .e(e), .f(f), .g(g)
+);
+
+// Control para mostrar el número 1 en las decenas cuando el botón esté presionado
+decodificador_decenas decodificador_decenas_inst (
+   .btn_in(btn_in),   
+   .ad(ad), .bd(bd), .cd(cd), .dd(dd), .ed(ed), .fd(fd), .gd(gd)
+);
 
 endmodule
-*/
+
 
 //4.1
 
@@ -46,15 +54,13 @@ endmodule
    logic b3, b2, b1, b0;
 
    assign b3 = Gray[3];
-   assign b2 = Gray[3] ^ Gray[2];
-   assign b1 = Gray[2] ^ Gray[1];
-   assign b0 = Gray[1] ^ Gray[0];
+   assign b2 = b3 ^ Gray[2];
+   assign b1 = b2 ^ Gray[1];
+   assign b0 = b1 ^ Gray[0];
 
    assign bin = {b3,b2,b1,b0};
 
  endmodule
-
-
 
 //4.2
 
@@ -73,51 +79,40 @@ module binary_leds (
 
 
 
+
+
 //4.3
 
-module binary_to_hexadecimal (
-   input logic ,
-   ouput logic 
-);
-
-endmodule
-
-module hexadecimal_to_sevensegment (
-
-);
-
-
-endmodule
-
-
-
-//Revisar Pong Chu FPGA, pag.68  , para hex_to_seven_seg
-module binary_to_sevenseg (
-   input logic bit3, bit2, bit1, bit0,
+// Módulo del decodificador para 7 segmentos (unidades)
+module decodificador_siete (
+   input logic [3:0] bin,
    output logic a, b, c, d, e, f, g
 );
 
-gray_to_binary 7segment (
-   .b3(bit3),
-   .b2(bit2),
-   .b1(bit1),
-   .b0(bit0)
-);
+   assign a = (~bin[1] & ~bin[3]) | (bin[1] & bin[3]) | bin[2] | bin[0];
+   assign b = (~bin[0] & ~bin[1]) | (~bin[3]) | (bin[0] & bin[1]);
+   assign c = (~bin[0]) | (bin[3]) | (bin[1]);
+   assign d = (~bin[1] & ~bin[3]) | (~bin[0] & bin[1] & bin[3]) | (bin[0] & ~bin[1]) | (bin[0] & ~bin[3]);
+   assign e = (~bin[1] & ~bin[3]) | (bin[0] & ~bin[1]);
+   assign f = (~bin[0] & ~bin[1]) | (~bin[0] & bin[3]) | bin[2] | (~bin[1] & bin[3]);
+   assign g = bin[2] | (~bin[0] & bin[3]) | (bin[0] & ~bin[3]) | (~bin[1] & bin[3]);
 
 endmodule
 
-
-
-
-module control_button(
-   input logic ,
-   output logic ,
-
+// Módulo del decodificador para 7 segmentos (decenas)
+module decodificador_decenas (
+   input logic btn_in,
+   output logic ad, bd, cd, dd, ed, fd, gd
 );
+
+   // Cuando el botón está presionado, se muestra el número 1
+   assign ad = btn_in ? 1'b0 : 1'b1;
+   assign bd = btn_in ? 1'b1 : 1'b0;
+   assign cd = btn_in ? 1'b1 : 1'b0;
+   assign dd = btn_in ? 1'b0 : 1'b1;
+   assign ed = btn_in ? 1'b0 : 1'b1;
+   assign fd = btn_in ? 1'b0 : 1'b1;
+   assign gd = btn_in ? 1'b0 : 1'b1;
+
 endmodule
-
-
-
-
-
 

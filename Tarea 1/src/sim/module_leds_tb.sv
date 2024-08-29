@@ -1,4 +1,4 @@
-`timescale 1ps/1ps
+`timescale 1ns/1ps
 
 module module_leds_tb ;
     logic [3:0] bin;

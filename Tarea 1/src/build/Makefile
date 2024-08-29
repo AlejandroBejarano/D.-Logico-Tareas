@@ -18,11 +18,16 @@ SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv 
 #4.1
 #TESTBENCH = ../sim/module_gray_to_binary_tb.sv
 #4.2
-TESTBENCH = ../sim/module_leds_tb.sv
+#TESTBENCH = ../sim/module_leds_tb.sv
+#4.3.1
+#TESTBENCH = ../sim/module_deco_siete_tb.sv
+#4.3.2
+#TESTBENCH = ../sim/module_deco_dece_tb.sv
+#Principal
+TESTBENCH = ../sim/module_principal_tb.sv
 
 #### Constraints para el proyecto
 #### aca va el archivo de constraints del proyecto
-#4.1
 CONSTRAINTS = ../constr/module_decoder.cst
 
 #### el top se indica sin la extension .v, esto hace referencia al nombre que le pusieron al módulo y no al archivo en si.
@@ -30,15 +35,30 @@ CONSTRAINTS = ../constr/module_decoder.cst
 #TOP_DESIGN = gray_to_binary
 #TOP_TB     = module_gray_to_binary_tb
 #4.2
-TOP_DESIGN = binary_leds
-TOP_TB     = module_leds_tb
+#TOP_DESIGN = binary_leds
+#TOP_TB     = module_leds_tb
+#4.3.1
+#TOP_DESIGN = decodificador_siete
+#TOP_TB     = deco_siete_tb
+#4.3.2
+#TOP_DESIGN = decodificador_decenas
+#TOP_TB     = deco_dece_tb
+#Principal
+TOP_DESIGN = principal 
+TOP_TB     = principal_tb
+
 
 #### nombre del vcd que va a generar el tb
 #4.1
 #VCD_FILE = module_gray_to_binary_tb.vcd
 #4.2
-VCD_FILE = module_leds_tb.vcd
-
+#VCD_FILE = module_leds_tb.vcd
+#4.3.1
+#VCD_FILE = module_deco_siete_tb.vcd
+#4.3.2
+#VCD_FILE = module_deco_dece_tb.vcd
+#Principal
+VCD_FILE = module_principal_tb.vcd
 
 all: synth pnr bitstream load
 

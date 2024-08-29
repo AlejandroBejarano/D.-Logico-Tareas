@@ -1,0 +1,260 @@
+$date
+	Thu Aug 29 00:18:44 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module principal_tb $end
+$var wire 4 ! leds [3:0] $end
+$var wire 1 " gd $end
+$var wire 1 # g $end
+$var wire 1 $ fd $end
+$var wire 1 % f $end
+$var wire 1 & ed $end
+$var wire 1 ' e $end
+$var wire 1 ( dd $end
+$var wire 1 ) d $end
+$var wire 1 * cd $end
+$var wire 1 + c $end
+$var wire 4 , bit_4 [3:0] $end
+$var wire 1 - bd $end
+$var wire 1 . b $end
+$var wire 1 / ad $end
+$var wire 1 0 a $end
+$var reg 1 1 btn_in $end
+$var reg 4 2 gray [3:0] $end
+$scope module b_l_inst $end
+$var wire 4 3 bin [3:0] $end
+$var reg 4 4 Led [3:0] $end
+$upscope $end
+$scope module d_d_inst $end
+$var wire 1 1 btn_in $end
+$var wire 1 " gd $end
+$var wire 1 $ fd $end
+$var wire 1 & ed $end
+$var wire 1 ( dd $end
+$var wire 1 * cd $end
+$var wire 1 - bd $end
+$var wire 1 / ad $end
+$upscope $end
+$scope module d_s_inst $end
+$var wire 1 0 a $end
+$var wire 1 . b $end
+$var wire 1 + c $end
+$var wire 1 ) d $end
+$var wire 1 ' e $end
+$var wire 1 % f $end
+$var wire 1 # g $end
+$var wire 4 5 bin [3:0] $end
+$upscope $end
+$scope module g_t_inst $end
+$var wire 4 6 Gray [3:0] $end
+$var wire 1 7 b0 $end
+$var wire 1 8 b1 $end
+$var wire 1 9 b2 $end
+$var wire 4 : bin [3:0] $end
+$var wire 1 ; b3 $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+0;
+b0 :
+09
+08
+07
+b0 6
+b0 5
+bx 4
+bx 3
+b0 2
+x1
+10
+x/
+1.
+x-
+b0 ,
+1+
+x*
+1)
+x(
+1'
+x&
+1%
+x$
+0#
+x"
+bx !
+$end
+#10000
+0%
+1#
+0+
+b1 ,
+b1 5
+b1 :
+17
+b1 2
+b1 6
+#20000
+0'
+1#
+1+
+18
+b11 ,
+b11 5
+b11 :
+17
+b10 2
+b10 6
+#30000
+0#
+0)
+00
+b10 ,
+b10 5
+b10 :
+07
+b11 2
+b11 6
+#40000
+0'
+1#
+1%
+1)
+10
+19
+18
+b111 ,
+b111 5
+b111 :
+17
+b100 2
+b100 6
+#50000
+0)
+b110 ,
+b110 5
+b110 :
+07
+b101 2
+b101 6
+#60000
+1'
+1+
+1)
+08
+b100 ,
+b100 5
+b100 :
+07
+b110 2
+b110 6
+#70000
+0+
+b101 ,
+b101 5
+b101 :
+17
+b111 2
+b111 6
+#80000
+0)
+0'
+1+
+18
+17
+b1111 ,
+b1111 5
+b1111 :
+1;
+b1000 2
+b1000 6
+#90000
+1)
+0.
+b1110 ,
+b1110 5
+b1110 :
+07
+b1001 2
+b1001 6
+#100000
+1.
+0)
+08
+b1100 ,
+b1100 5
+b1100 :
+07
+b1010 2
+b1010 6
+#110000
+0.
+1)
+1'
+b1101 ,
+b1101 5
+b1101 :
+17
+b1011 2
+b1011 6
+#120000
+1.
+00
+1#
+0)
+1%
+0'
+09
+08
+b1000 ,
+b1000 5
+b1000 :
+07
+b1100 2
+b1100 6
+#130000
+0.
+1)
+1'
+10
+b1001 ,
+b1001 5
+b1001 :
+17
+b1101 2
+b1101 6
+#140000
+1.
+0#
+0%
+0)
+0'
+10
+18
+b1011 ,
+b1011 5
+b1011 :
+17
+b1110 2
+b1110 6
+#150000
+1)
+1#
+1%
+0.
+b1010 ,
+b1010 5
+b1010 :
+07
+b1111 2
+b1111 6
+#160000

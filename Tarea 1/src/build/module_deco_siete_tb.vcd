@@ -1,0 +1,155 @@
+$date
+	Wed Aug 28 19:46:47 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module deco_siete_tb $end
+$var wire 1 ! g $end
+$var wire 1 " f $end
+$var wire 1 # e $end
+$var wire 1 $ d $end
+$var wire 1 % c $end
+$var wire 1 & b $end
+$var wire 1 ' a $end
+$var reg 4 ( leds [3:0] $end
+$scope module decodificador_siete_tb $end
+$var wire 1 ' a $end
+$var wire 1 & b $end
+$var wire 1 % c $end
+$var wire 1 $ d $end
+$var wire 1 # e $end
+$var wire 1 " f $end
+$var wire 1 ! g $end
+$var wire 1 ) led0 $end
+$var wire 1 * led1 $end
+$var wire 1 + led2 $end
+$var wire 1 , led3 $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+0,
+0+
+0*
+0)
+b0 (
+1'
+1&
+1%
+1$
+1#
+1"
+0!
+$end
+#10000
+0"
+0%
+1!
+1)
+b1 (
+#20000
+0'
+0$
+0!
+0#
+1%
+0)
+1*
+b10 (
+#30000
+1!
+1$
+1'
+1)
+b11 (
+#40000
+1#
+1$
+1"
+1%
+0)
+0*
+1+
+b100 (
+#50000
+0%
+1)
+b101 (
+#60000
+0$
+0#
+1%
+0)
+1*
+b110 (
+#70000
+1$
+1)
+b111 (
+#80000
+0$
+1&
+1"
+0'
+0)
+0*
+0+
+1,
+b1000 (
+#90000
+0&
+1$
+1#
+1'
+1)
+b1001 (
+#100000
+1$
+1"
+1!
+0#
+1'
+0)
+1*
+b1010 (
+#110000
+0$
+0"
+0!
+1&
+1)
+b1011 (
+#120000
+1!
+1&
+1"
+0)
+0*
+1+
+b1100 (
+#130000
+0&
+1$
+1#
+1)
+b1101 (
+#140000
+1$
+0#
+0)
+1*
+b1110 (
+#150000
+0$
+1&
+1)
+b1111 (
+#160000
