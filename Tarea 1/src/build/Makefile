@@ -6,30 +6,44 @@ FAMILY = GW1N-9C
 DEVICE = GW1NR-LV9QN88PC6/I5
 
 #Nombre del proyecto... Acá ponen el nombre que deseen.
-PROYECT = 
+PROYECT = Decoder
 
 #Fuentes de diseno
 SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv que estan en design
 #Si quieren indicarlas una a una, pueden hacerlo como en este ejemplo:
 #SOURCES = ../design/module_top_deco_gray.v ../design/module_input_deco_gray.v 
 
-#Fuente de simulacion
-#aca va el testbench que quieran simular
-TESTBENCH = ../sim/TB.sv
+#### Fuente de simulacion
+#### aca va el testbench que quieran simular
+#4.1
+#TESTBENCH = ../sim/module_gray_to_binary_tb.sv
+#4.2
+TESTBENCH = ../sim/module_leds_tb.sv
 
-# Constraints para el proyecto
-#aca va el archivo de constraints del proyecto
-CONSTRAINTS = ../constr/CONSTRAINTS.cst
+#### Constraints para el proyecto
+#### aca va el archivo de constraints del proyecto
+#4.1
+CONSTRAINTS = ../constr/module_decoder.cst
 
-#el top se indica sin la extension .v, esto hace referencia al nombre que le pusieron al módulo y no al archivo en si.
-TOP_DESIGN = 
-TOP_TB     = 
+#### el top se indica sin la extension .v, esto hace referencia al nombre que le pusieron al módulo y no al archivo en si.
+#4.1
+#TOP_DESIGN = gray_to_binary
+#TOP_TB     = module_gray_to_binary_tb
+#4.2
+TOP_DESIGN = binary_leds
+TOP_TB     = module_leds_tb
 
-#nombre del vcd que va a generar el tb
-VCD_FILE = 
+#### nombre del vcd que va a generar el tb
+#4.1
+#VCD_FILE = module_gray_to_binary_tb.vcd
+#4.2
+VCD_FILE = module_leds_tb.vcd
 
 
 all: synth pnr bitstream load
+
+
+
 
 # Synthesis
 synth: ${SOURCES}
