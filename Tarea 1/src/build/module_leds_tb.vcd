@@ -1,0 +1,59 @@
+$date
+	Wed Aug 28 18:12:15 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module module_leds_tb $end
+$var wire 4 ! leds [3:0] $end
+$var reg 4 " bin [3:0] $end
+$scope module binary_leds_tb $end
+$var wire 4 # bin [3:0] $end
+$var reg 4 $ Led [3:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+bx $
+bx #
+b0 "
+bx !
+$end
+#10
+b1 "
+#20
+b10 "
+#30
+b11 "
+#40
+b100 "
+#50
+b101 "
+#60
+b110 "
+#70
+b111 "
+#80
+b1000 "
+#90
+b1001 "
+#100
+b1010 "
+#110
+b1011 "
+#120
+b1100 "
+#130
+b1101 "
+#140
+b1110 "
+#150
+b1111 "
+#160

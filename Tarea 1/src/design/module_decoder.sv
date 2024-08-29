@@ -55,23 +55,19 @@ endmodule
 
 //4.2
 
-/*
-//Con una instancia toma los valores de los bits para los Leds.
+
 module binary_leds (
     input logic [3:0]bin,
     output logic [3:0] Led
-
  );
 
-   logic bit3, bit2, bit1, bit1;
-
-   assign bit3 = led3;
-   assign bit2 = led2;
-   assign bit1 = led1;
-   assign bit0 = led0;
+   assign bin[3] = Led[3];
+   assign bin[2] = Led[2];
+   assign bin[1] = Led[1];
+   assign bin[0] = Led[0];
 
  endmodule
-*/
+
 
 
 
