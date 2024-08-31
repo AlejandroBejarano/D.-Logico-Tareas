@@ -5,7 +5,7 @@ module deco_dece_tb;
    logic [3:0] bits;
    logic a, b, c, d, e, f, g;
    logic btn_in;
-   logic ad, bd, cd, dd, ed, fd, gd;
+   logic bd, cd;
 
     decodificador_siete deco_s_inst(
         .bin(bits),
@@ -14,7 +14,7 @@ module deco_dece_tb;
 
     decodificador_decenas decodificador_decenas_inst(
         .btn_in(btn_in),
-        .ad(ad), .bd(bd), .cd(cd), .dd(dd), .ed(ed), .fd(fd), .gd(gd)
+        .bd(bd), .cd(cd)
     );
 
     initial begin

@@ -73,6 +73,14 @@ IO_LOC "catodo_po[2]" IO_TYPE=LVCMOS33; //Cathode[a]
 
 
 
+IO_LOC "catodo_po[7]" 33;
+IO_LOC "catodo_po[7]" IO_TYPE=LVCMOS33; //Cathode[bd]
+
+IO_LOC "catodo_po[8]" 34;
+IO_LOC "catodo_po[8]" IO_TYPE=LVCMOS33; //Cathode[cd]
+
+
+
 IO_LOC "anodo_po[1]" 57;
 IO_LOC "anodo_po[1]" IO_TYPE=LVCMOS33; //Anode_digit_1
 

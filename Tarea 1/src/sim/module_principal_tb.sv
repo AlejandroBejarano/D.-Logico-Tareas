@@ -6,6 +6,7 @@ module principal_tb;
     logic [3:0] leds;
     logic a, b, c, d, e, f, g;
     logic btn_in;
+    logic bd, cd;
 
 
     gray_to_binary g_t_inst (
@@ -25,7 +26,7 @@ module principal_tb;
 
     decodificador_decenas d_d_inst(
         .btn_in(btn_in),
-        .ad(ad), .bd(bd), .cd(cd), .dd(dd), .ed(ed), .fd(fd), .gd(gd)
+        .bd(bd), .cd(cd)
     );
 
 

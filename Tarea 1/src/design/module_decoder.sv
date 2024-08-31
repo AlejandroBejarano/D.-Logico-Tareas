@@ -9,7 +9,7 @@ module principal (
    output logic pin_uni,
    output logic pin_dec,
    output logic a, b, c, d, e, f, g,  // Salidas para el 7 segmentos uniades
-   output logic ad, bd, cd, dd, ed, fd, gd  // Salidas para el 7 segmentos de decenas
+   output logic bd, cd  // Salidas para el 7 segmentos de decenas
 );
 
 logic [3:0] bin_todos;
@@ -38,7 +38,7 @@ decodificador_siete decodificador_unidades_inst (
 // Control para mostrar el número 1 en las decenas cuando el botón esté presionado
 decodificador_decenas decodificador_decenas_inst (
    .btn_in(btn_in),   
-   .ad(ad), .bd(bd), .cd(cd), .dd(dd), .ed(ed), .fd(fd), .gd(gd)
+   .bd(bd), .cd(cd)
 );
 
 endmodule
@@ -102,17 +102,13 @@ endmodule
 // Módulo del decodificador para 7 segmentos (decenas)
 module decodificador_decenas (
    input logic btn_in,
-   output logic ad, bd, cd, dd, ed, fd, gd
+   output logic bd, cd
 );
 
    // Cuando el botón está presionado, se muestra el número 1
-   assign ad = btn_in ? 1'b0 : 1'b1;
    assign bd = btn_in ? 1'b1 : 1'b0;
    assign cd = btn_in ? 1'b1 : 1'b0;
-   assign dd = btn_in ? 1'b0 : 1'b1;
-   assign ed = btn_in ? 1'b0 : 1'b1;
-   assign fd = btn_in ? 1'b0 : 1'b1;
-   assign gd = btn_in ? 1'b0 : 1'b1;
+
 
 endmodule
 
