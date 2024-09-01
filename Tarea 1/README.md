@@ -1,4 +1,43 @@
-# Nombre del proyecto
+# Circuito decodificador
+## 1 Resumen 
+Este circuito implementa un decodificardor de Gray en la FPGA el cual se 
+## 2 Introducción 
+## 3 Objetivos 
+## 4 Diseño
+## 4.1 Descripción general del funcionamiento del circuito completo y cada subsistema 
+## 4.2 Diagramas de bloques de cada subsistema y su funcionamiento fundamental
+## 4.3 Un ejemplo de la simplificación de las ecuaciones booleanas 
+## 4.4 Ejemplo y análisis de una simulación funcional del sistema completo, desde el estímulo de entrada hasta el manejo de los 7 segmentos.
+## 4.5 Análisis de consumo de recursos en la FPGA (LUTs, FFs, etc.) y del consumo de potencia que reporta las herramientas.
+## 4.6 Análisis de principales problemas hallados durante el trabajo y de las soluciones aplicadas.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ## 1. Abreviaturas y definiciones
 - **FPGA**: Field Programmable Gate Arrays
