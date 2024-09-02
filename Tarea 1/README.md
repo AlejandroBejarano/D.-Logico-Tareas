@@ -206,7 +206,7 @@ Digrama de bloque:
 - Este segmento se enciende si bin[2] es 1, o si bin[0] es 0 y bin[3] es 1, o si bin[0] es 1 y bin[3] es 0, o si bin[1] es 0 y bin[3] es 1.
 
 ### 4.3 Un ejemplo de la simplificación de las ecuaciones booleanas 
-... proceso
+![ecuacion](Imagenes/ecuacion.jpg)
 
 
 ### 4.4 Ejemplo y análisis de una simulación funcional del sistema completo, desde el estímulo de entrada hasta el manejo de los 7 segmentos.
@@ -336,11 +336,25 @@ De esto se observa los pocos recursos utilizados en la FPGA, como el nodo de ali
 
 
 
-### 4.6 Análisis de principales problemas hallados durante el trabajo y de las soluciones aplicadas.
+## 5 Conclusiones
+- Al concluir con este circuito, se puede resaltar la importancia de los mapas de Karnaugh, las tablas de verdad y la funcionalidad de las compuertas lógicas, ya que fueron de gran utilidad para simplificar las ecuaciones. Estos elementos son la base y la lógica necesaria para que el circuito se pueda ejecutar correctamente.
+- Otro punto importante a destacar después de terminar este proyecto es la relevancia de saber programar en un lenguaje como el HDL. Esto permite estructurar y diseñar los circuitos electrónicos de manera que sea más fácil encontrar problemas o errores en el circuito. Además, facilita un análisis más detallado junto con una simulación realista.
+- Después de terminar el circuito decodificador, se puede concluir que el circuito funciona de manera muy eficiente, dado que el consumo por parte de la FPGA es muy bajo al utilizar bloques y nodos.
 
 
+## 6 Análisis de principales problemas hallados durante el trabajo y de las soluciones aplicadas.
+A lo largo del trabajo se presentaron varios problemas, como:
+- Inicialmente, no se tenía claro por dónde empezar. A pesar de haber visto los tutoriales del asistente, no se tenía una idea clara de qué era lo que se debía hacer específicamente. Sin embargo, a medida que se explicaba en la clase y conforme se le iba preguntando al asistente, y según sus respuestas, se empezó a diseñar la primera parte de la programación en SystemVerilog.
+- Otros de los incombenientes era como programar porque apesar de que se tenia claro que era lo que se tenia que hacer aun se nesesitava escribirlo en el languaje de HDL, sin ningun funcion avansada por eso se busco en el libro, en las presentaciones que el profesor compartio y en el video tutorial del asistente para tener una idea de cuel era la extrutura que se debia seguir.Otro inconveniente fue la programación, ya que, aunque se tenía claro qué hacer, aún se necesitaba escribirlo en el lenguaje HDL sin usar funciones avanzadas. Por ello, se consultaron libros, las presentaciones compartidas por el profesor y el video tutorial del asistente para entender la estructura que se debía seguir.
+-Después, se presentaron errores de sintaxis, los cuales fueron más tediosos porque no se sabía exactamente dónde estaban ubicados. Para resolverlos, se realizaron copias del código que sí funcionaba y se empezaron a hacer ajustes en las partes que presentaban errores.
+- Finalmente, al crear el circuito físico, uno de los principales problemas fue que, en la lógica del diagrama del profesor, se trabajó con un display de ánodo común, pero en nuestro caso se nos proporcionó uno de cátodo común. Dado que ya se habían comprado todos los materiales para armar el circuito, surgieron dos opciones: buscar otros displays y trabajar con el transistor PNP, además de ajustar las ecuaciones, ya que estaban calculadas para un cátodo común, o volver a comprar un transistor NPN y simplemente reemplazar el anterior. Al final, se optó por la segunda opción porque se consideró que era la más viable.
 
+## 7. Referencias
+[1] David Harris y Sarah Harris. *Digital Design and Computer Architecture. RISC-V Edition.* Morgan Kaufmann, 2022. ISBN: 978-0-12-820064-3.
 
+[2] D. Medina, "Tutorial: herramientas os FPGA TangNano9k," YouTube, Aug. 1, 2024. [Online]. Available: https://www.youtube.com/watch?v=AKO-SaOM7BA. [Accessed: Sep. 1, 2024].
+
+[3] D. Josue MM, "open_source_fpga_environment," *GitHub*, Repository, Aug. 1, 2024. [Online]. Available: https://github.com/DJosueMM/open_source_fpga_environment/wiki. [Accessed: Sep. 1, 2024].
 
 
 
