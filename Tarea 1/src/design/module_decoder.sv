@@ -78,9 +78,6 @@ module binary_leds (
  endmodule
 
 
-
-
-
 //4.3
 
 // Módulo del decodificador para 7 segmentos (unidades)

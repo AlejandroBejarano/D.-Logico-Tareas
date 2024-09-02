@@ -1,17 +1,197 @@
 # Circuito decodificador
 ## 1 Resumen 
-En este infrome se descirbe la implementacion de un decodificardor de Gray en la FPGA por medio de un codigo en HDL basiso, el cual se subdivide en sistemas donde el primero consisten en la lectora del codigo Gray, el despliegue y traducción al formato binario para presentarlo en luces LED y por ultimo el despliegue de codigo ingresado y decodificado al display de 7 segmentos en codigo decimal.
+En este informe se describe la implementación de un decodificador de Gray en la FPGA por medio de un sistema digital de un código en HDL básico, el cual se subdivide en sistemas donde el primero consiste en la lectura del código Gray, el despliegue y traducción al formato binario para presentarlo en luces LED y por último el despliegue del código ingresado y decodificado al display de 7 segmentos en código decimal..
 ## 2 Introducción 
-En la actualida se trabaja con diseños digitales altamnete complejos que nesesitan ayuda asistida por la computadora por lo que es vital aprender lenguajes de descripción de hadware como el HDL que es utilizado en la sintesi de deseños digitales  para ser fabricados en silicio o en
-FPGA.Las FPGAs, son circuitos integrados reconfigurables que de acuerdo su programación implementan
-una especificación funcional a partir de un código HDL.
-Un codigo binario en la representacion de 0 y 1 usado para la representacion de texto o procesadores de intrucción de las computadoras ya que se 0 reprerante apagado (sin carga electrica) y 1 ecendido (con craga electrica), sin embargo deacuerdo con los dispositivos que se trabajo pueden estar invertido. Estos numeros tambien tiene su representacion en numeros decimales que deacuerdo a las posicion y cantidad de ceros y unos representan un numero decimal.
-Asi mismo el codigo Gray en es un sistema de numeracion binario en los que dos numeros consecutivos solo difieren de un digito y fue diseñado para prevenir señales falsas, pero actualmente es usado para facilitar la corrección de errores en los sistemas de comunicaciones.
-## 3 Objetivos 
+En la actualidad se trabaja con diseños digitales altamente complejos que necesitan ayuda asistida por la computadora, por lo que es vital aprender lenguajes de descripción de hardware como el HDL, que es utilizado en la síntesis de diseños digitales para ser fabricados en silicio o en FPGA. Las FPGAs son circuitos integrados reconfigurables que, de acuerdo con su programación, implementan una especificación funcional a partir de un código HDL.
 
+Un código binario es la representación de 0 y 1 usado para la representación de texto o procesadores de instrucciones de las computadoras, ya que 0 representa apagado (sin carga eléctrica) y 1 encendido (con carga eléctrica); sin embargo, de acuerdo con los dispositivos que se utilizan, pueden estar invertidos. Estos números también tienen su representación en números decimales que, de acuerdo con la posición y cantidad de ceros y unos, representan un número decimal.
+
+Asimismo, el código Gray es un sistema de numeración binario en el que dos números consecutivos solo difieren en un dígito. Fue diseñado para prevenir señales falsas, pero actualmente es usado para facilitar la corrección de errores en los sistemas de comunicaciones.
+## 3 Objetivos 
+### Objetivos
+- Realizar una lectura de código Gray para decodificarlo tanto en formato binario como decimal y representarlos en las luces LED y en el display de 7 segmentos seguidamente. 
+- Elaborar un sistema digital del circuito decodificador utilizando lenguajes de descripción de hardware en una FPGA.
+- Construir los testbench de cada módulo para comprobar las especificaciones del diseño.
 ## 4 Diseño
-### 4.1 Descripción general del funcionamiento del circuito completo y cada subsistema 
+### 4.1 Descripción general del funcionamiento del circuito completo y cada subsistema
+#### Modulo principal 
+Se va a empezar describiendo el modulos principal
+```SystemVerilog
+module principal (
+   input logic [3:0] Gray,
+   input logic [3:0] bin,
+   input logic btn_in, 
+   output logic [3:0] Led,
+   output logic pin_uni,
+   output logic pin_dec,
+   output logic a, b, c, d, e, f, g,  // Salidas para el 7 segmentos uniades
+   output logic bd, cd  // Salidas para el 7 segmentos de decenas
+);
+
+logic [3:0] bin_todos;
+```
+En este sección del código se inicial el `module` definiendole sus entradas y salidas
+-Entradas 
+Se definen las entradas que se nesecitan donde:
+`Gray` se la van a poder ingresar 4 valores enumerador de 0 hasta 3 al igul que el `bin`.
+Se agrgo un boton `btn_in` que es el que va a activar el 1 de las decenas.
+
+Salidas
+Despues de describir la salidas donde:
+`Led` es la salida que va a presentar los numeros decodifcados del condigo Gray.
+`pin_uni` y `pin_dec` son son pines encargados de ubicar la salida de la conexion que va a tener la resistencia de la base de los trsnsistores npn.
+`a`,`b`,`c`, etc son las salidas que van a estar conectadas a los segmentos del display de la unidades.
+`bd` y `cd` son las unicas dos salidas que van a estar conectadas al display de las decenas para el uno.
+`bin_todos` es la variable interna donde se guarda el numero decodificado de Gray.
+
+```SystemVerilog
+// Instancia
+gray_to_binary g_to_b_inst (
+   .Gray(Gray),
+   .bin(bin_todos)
+);
+
+// Instancia
+binary_leds b_to_l_inst (
+   .bin(bin_todos),
+   .Led(Led)
+);
+
+assign pin_uni = btn_in ? 1'b0 : 1'b1;
+assign pin_dec = btn_in ? 1'b1 : 1'b0;
+
+
+decodificador_siete decodificador_unidades_inst (
+   .bin(bin_todos),
+   .a(a), .b(b), .c(c), .d(d), .e(e), .f(f), .g(g)
+);
+
+// Control para mostrar el número 1 en las decenas cuando el botón esté presionado
+decodificador_decenas decodificador_decenas_inst (
+   .btn_in(btn_in),   
+   .bd(bd), .cd(cd)
+);
+```
+Se contiua con las instancias que llaman a otros dos modulos diferenres dentro del modul principal.
+- La primera instancia es `g_to_b_inst` que es del modulo `gray_to_binary` que se va a describir más adelante:
+    - Lo que hace esta instancia es la lectura del codigo Gray a codigo binario conectando la señal de entrada Gray a la entrada del módulo y la salida binaria resultante se asigna a bin_todos. 
+-La segunda instancia es `b_to_l_inst` que es del modulo ` binary_leds` que se describe más adelante:
+    - Lo que hace esta instancia es tomar el numero decodificado y pasarlo a las luces LED.
+Lo que hacen los `assign` es verificar si se esta trabajando con unidades o decenas y deacuerdo a al resultado desactiva el display de las decenas o el de las unidades.
+- La tercer instancia `decodificador_unidades_inst` que es del modulo `decodificador_siete` que también se dercribe su funcionamiento más adelante:
+    - Lo que hace esta intancia es agarrar el codigo decodificado en binario y enviarselo a los segmentos del display de las unidades para decirle cuales luces LED se encianden y cuales no. 
+- La cuarta instancia `decodificador_decenas_inst` que es del module `decodificador_decenas` que se va a explicar más:
+    - Lo que hace es que al igual que la instancia anterior envia la señal de cuales LEDs del display se enciende.
+
+#### Module gray_to_binary (Lectura y decodificación)
+```SystemVerilog
+ module gray_to_binary (
+    input logic [3:0] Gray,
+    output logic [3:0] bin   
+ );
+
+   logic b3, b2, b1, b0;
+
+   assign b3 = Gray[3];
+   assign b2 = b3 ^ Gray[2];
+   assign b1 = b2 ^ Gray[1];
+   assign b0 = b1 ^ Gray[0];
+
+   assign bin = {b3,b2,b1,b0};
+
+ endmodule
+```
+En este modulo se vuelven a definir cuales son sus entradas las cuales son `Gray` y `bin`  respectivamente. 
+
+Se definene las señales internas para codificar los bits `logic b3, b2, b1, b0`. 
+-`b3` es el bit más significativo por lo que tambien va a representar el `Gray[3]`.
+-`b2` es el rultado del la operacion de la compuarta XOR entre `b3` y `Gray[3]` y así sucesivamente para lo demas resultados.
+
+Por ultimo se concatenan para formar el número binario completo en el `bin` y finalisa el modulo.
+
+```SystemVerilog
+module binary_leds (
+    input logic [3:0]bin,
+    output logic [3:0] Led
+ );
+
+   assign bin[3] = Led[3];
+   assign bin[2] = Led[2];
+   assign bin[1] = Led[1];
+   assign bin[0] = Led[0];
+
+ endmodule
+ ```
+ Este modulo lo que hace es controlar los LEDs de acuerdo a los valores obtenidos en el `bin` y representarlo en los LEDs donde un LED encendido significa un 1 y LED apagado significa un LED apagado, siendo en Led[3] el más significativo.
+
+ ```SystemVerilog
+ module decodificador_siete (
+   input logic [3:0] bin,
+   output logic a, b, c, d, e, f, g
+);
+
+   assign a = (~bin[1] & ~bin[3]) | (bin[1] & bin[3]) | bin[2] | bin[0];
+   assign b = (~bin[0] & ~bin[1]) | (~bin[3]) | (bin[0] & bin[1]);
+   assign c = (~bin[0]) | (bin[3]) | (bin[1]);
+   assign d = (~bin[1] & ~bin[3]) | (~bin[0] & bin[1] & bin[3]) | (bin[0] & ~bin[1]) | (bin[0] & ~bin[3]);
+   assign e = (~bin[1] & ~bin[3]) | (bin[0] & ~bin[1]);
+   assign f = (~bin[0] & ~bin[1]) | (~bin[0] & bin[3]) | bin[2] | (~bin[1] & bin[3]);
+   assign g = bin[2] | (~bin[0] & bin[3]) | (bin[0] & ~bin[3]) | (~bin[1] & bin[3]);
+
+endmodule
+```
+En este modulo e igual que los anteriores se definen cuales van a ser la variables de entrada y cuales son las salidas siando en este caso `bin` la entrada y `a`,`b`,etc las salidas.
+
+De acuerdo a los valores que se encuantren en el ``bin` se encarga de enviarle al 7 segmentos cuales LEDs se deben encender y cuales no vajo la cundicion de que si se obtine un 1 se enciande y si se obtiene un 0 se queda apagado. 
+Esto de acuerdo a las ecuaciones buleanas que se le fueron asignadas a cada letra de los segmentos.
+
+Un ejemplo pare el segmento a: 
+- `assign a = (~bin[1] & ~bin[3]) | (bin[1] & bin[3]) | bin[2] | bin[0];`
+    - a se enciende si se cumple alguna de estas condiciones:
+    - bin[1] y bin[3] son ambos 0, o ambos son 1.
+    - bin[2] es 1.
+    - bin[0] es 1.
+
+```SystemVerilog
+module decodificador_decenas (
+   input logic btn_in,
+   output logic bd, cd
+);
+
+   // Cuando el botón está presionado, se muestra el número 1
+   assign bd = btn_in ? 1'b1 : 1'b0;
+   assign cd = btn_in ? 1'b1 : 1'b0;
+
+
+endmodule
+```
+Se definen las entradas y las salidas como en cada modulo anterior donde `btn_in` en las entrada y `bd` y `cd` las salidas.
+
+Este modulo se encraga de habilitar cual de los segmentos se enciande deacuerdo a las unidades que se este trabajando el cual se le va a indicar si el boton enta encendido con un 1 o apagado con un 0 y en el caso de que se este trabjando con las decenas se envia las señaes para que se muestre un uno en el display.
+
 ### 4.2 Diagramas de bloques de cada subsistema y su funcionamiento fundamental
+#### Segmento a
+Digrama de bloque:
+
+#### Segmento b
+Digrama de bloque:
+
+#### Segmento c
+Digrama de bloque:
+
+#### Segmento d
+Digrama de bloque:
+
+#### Segmento e
+Digrama de bloque:
+
+#### Segmento f
+Digrama de bloque:
+
+#### Segmento g
+Digrama de bloque:
+
+
 ### 4.3 Un ejemplo de la simplificación de las ecuaciones booleanas 
 ### 4.4 Ejemplo y análisis de una simulación funcional del sistema completo, desde el estímulo de entrada hasta el manejo de los 7 segmentos.
 ### 4.5 Análisis de consumo de recursos en la FPGA (LUTs, FFs, etc.) y del consumo de potencia que reporta las herramientas.
