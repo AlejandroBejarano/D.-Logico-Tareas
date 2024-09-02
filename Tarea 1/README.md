@@ -171,43 +171,43 @@ Este modulo se encraga de habilitar cual de los segmentos se enciande deacuerdo 
 
 ### 4.2 Diagramas de bloques de cada subsistema y su funcionamiento fundamental
 #### Segmento a
-Digrama de bloque:
+Diagrama de bloque:
 
 ![a](Imagenes/a.jpg)
 -Este segmento se enciende si bin[2] o bin[0] son 1, o si bin[1] y bin[3] son ambos 0 o ambos 1.
 
 #### Segmento b
-Digrama de bloque:
+Diagrama de bloque:
 
 ![b](Imagenes/b.jpg)
 - Este segmento se enciende si bin[3] es 0, o si bin[0] y bin[1] son ambos 0, o si ambos son 1.
 
 #### Segmento c
-Digrama de bloque:
+Diagrama de bloque:
 
 ![c](Imagenes/c.jpg)
 - Este segmento se enciende si bin[0] es 0, o bin[3] es 1, o bin[1] es 1.
 
 #### Segmento d
-Digrama de bloque:
+Diagrama de bloque:
 
 ![d](Imagenes/d.jpg)
 - Este segmento se enciende si bin[1] y bin[3] son ambos 0, o si bin[0] es 0 y bin[1] y bin[3] son 1, o si bin[0] es 1 y bin[1] es 0, o si bin[0] es 1 y bin[3] es 0.
 
 #### Segmento e
-Digrama de bloque:
+Diagrama de bloque:
 
 ![e](Imagenes/e.jpg)
 - Este segmento se enciende si bin[1] y bin[3] son ambos 0, o si bin[0] es 1 y bin[1] es 0.
 
 #### Segmento f
-Digrama de bloque:
+Diagrama de bloque:
 
 ![f](Imagenes/f.jpg)
 - Este segmento se enciende si bin[0] y bin[1] son ambos 0, o si bin[0] es 0 y bin[3] es 1, o bin[2] es 1, o si bin[1] es 0 y bin[3] es 1.
 
 #### Segmento g
-Digrama de bloque:
+Diagrama de bloque:
 
 ![g](Imagenes/g.jpg)
 - Este segmento se enciende si bin[2] es 1, o si bin[0] es 0 y bin[3] es 1, o si bin[0] es 1 y bin[3] es 0, o si bin[1] es 0 y bin[3] es 1.
