@@ -172,27 +172,43 @@ Este modulo se encraga de habilitar cual de los segmentos se enciande deacuerdo 
 ### 4.2 Diagramas de bloques de cada subsistema y su funcionamiento fundamental
 #### Segmento a
 Digrama de bloque:
+![a](Imagenes/a.jpg)
+-Este segmento se enciende si bin[2] o bin[0] son 1, o si bin[1] y bin[3] son ambos 0 o ambos 1.
 
 #### Segmento b
 Digrama de bloque:
+![b](Imagenes/b.jpg)
+- Este segmento se enciende si bin[3] es 0, o si bin[0] y bin[1] son ambos 0, o si ambos son 1.
 
 #### Segmento c
 Digrama de bloque:
+![c](Imagenes/c.jpg)
+- Este segmento se enciende si bin[0] es 0, o bin[3] es 1, o bin[1] es 1.
 
 #### Segmento d
 Digrama de bloque:
+![d](Imagenes/d.jpg)
+- Este segmento se enciende si bin[1] y bin[3] son ambos 0, o si bin[0] es 0 y bin[1] y bin[3] son 1, o si bin[0] es 1 y bin[1] es 0, o si bin[0] es 1 y bin[3] es 0.
 
 #### Segmento e
 Digrama de bloque:
+![e](Imagenes/e.jpg)
+- Este segmento se enciende si bin[1] y bin[3] son ambos 0, o si bin[0] es 1 y bin[1] es 0.
 
 #### Segmento f
 Digrama de bloque:
+![f](Imagenes/f.jpg)
+- Este segmento se enciende si bin[0] y bin[1] son ambos 0, o si bin[0] es 0 y bin[3] es 1, o bin[2] es 1, o si bin[1] es 0 y bin[3] es 1.
 
 #### Segmento g
 Digrama de bloque:
-
+![g](Imagenes/g.jpg)
+- Este segmento se enciende si bin[2] es 1, o si bin[0] es 0 y bin[3] es 1, o si bin[0] es 1 y bin[3] es 0, o si bin[1] es 0 y bin[3] es 1.
 
 ### 4.3 Un ejemplo de la simplificación de las ecuaciones booleanas 
+... proceso
+
+
 ### 4.4 Ejemplo y análisis de una simulación funcional del sistema completo, desde el estímulo de entrada hasta el manejo de los 7 segmentos.
 
 Para comprobar el funcionamiento correcto del sistema desarrollado, se realizó la creación de un Testbench, el cual tiene como finalidad, crear una simulación del sistema, para verificar su correcto funcionamiento, esto antes de implementarlo a la FPGA. Para ello se desarrolló el módulo principal_tb con las siguientes variables declaradas como logic.
@@ -317,8 +333,6 @@ Info: 	                 OSC:     0/    1     0%
 Info: 	                rPLL:     0/    2     0%
 ```
 De esto se observa los pocos recursos utilizados en la FPGA, como el nodo de alimentación VCC, bloques de lógica SLICE, bloques de entrada y salida IOB, el nodo a tierra GND y GSR, para el reinicio de la FPGA.
-
-
 
 
 
