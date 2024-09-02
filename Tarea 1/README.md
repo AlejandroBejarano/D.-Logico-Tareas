@@ -76,13 +76,13 @@ Se contiua con las instancias que llaman a otros dos modulos diferenres dentro d
 - La primera instancia es `g_to_b_inst` que es del modulo `gray_to_binary` que se va a describir más adelante:
     - Lo que hace esta instancia es la lectura del codigo Gray a codigo binario conectando la señal de entrada Gray a la entrada del módulo y la salida binaria resultante se asigna a bin_todos. 
 
--La segunda instancia es `b_to_l_inst` que es del modulo ` binary_leds` que se describe más adelante:
+- La segunda instancia es `b_to_l_inst` que es del modulo ` binary_leds` que se describe más adelante:
     - Lo que hace esta instancia es tomar el numero decodificado y pasarlo a las luces LED.
 Lo que hacen los `assign` es verificar si se esta trabajando con unidades o decenas y deacuerdo a al resultado desactiva el display de las decenas o el de las unidades.
 
 - La tercer instancia `decodificador_unidades_inst` que es del modulo `decodificador_siete` que también se dercribe su funcionamiento más adelante:
     - Lo que hace esta intancia es agarrar el codigo decodificado en binario y enviarselo a los segmentos del display de las unidades para decirle cuales luces LED se encianden y cuales no. 
-    
+
 - La cuarta instancia `decodificador_decenas_inst` que es del module `decodificador_decenas` que se va a explicar más:
     - Lo que hace es que al igual que la instancia anterior envia la señal de cuales LEDs del display se enciende.
 
