@@ -1,19 +1,18 @@
 # Circuito decodificador
-## 1 Resumen 
+## 1. Resumen 
 En este informe se describe la implementación de un decodificador de Gray en la FPGA por medio de un sistema digital de un código en HDL básico, el cual se subdivide en sistemas donde el primero consiste en la lectura del código Gray, el despliegue y traducción al formato binario para presentarlo en luces LED y por último el despliegue del código ingresado y decodificado al display de 7 segmentos en código decimal..
-## 2 Introducción 
+## 2. Introducción 
 En la actualidad se trabaja con diseños digitales altamente complejos que necesitan ayuda asistida por la computadora, por lo que es vital aprender lenguajes de descripción de hardware como el HDL, que es utilizado en la síntesis de diseños digitales para ser fabricados en silicio o en FPGA. Las FPGAs son circuitos integrados reconfigurables que, de acuerdo con su programación, implementan una especificación funcional a partir de un código HDL.
 
 Un código binario es la representación de 0 y 1 usado para la representación de texto o procesadores de instrucciones de las computadoras, ya que 0 representa apagado (sin carga eléctrica) y 1 encendido (con carga eléctrica); sin embargo, de acuerdo con los dispositivos que se utilizan, pueden estar invertidos. Estos números también tienen su representación en números decimales que, de acuerdo con la posición y cantidad de ceros y unos, representan un número decimal.
 
 Asimismo, el código Gray es un sistema de numeración binario en el que dos números consecutivos solo difieren en un dígito. Fue diseñado para prevenir señales falsas, pero actualmente es usado para facilitar la corrección de errores en los sistemas de comunicaciones.
-## 3 Objetivos 
-### Objetivos
+## 3. Objetivos 
 - Realizar una lectura de código Gray para decodificarlo tanto en formato binario como decimal y representarlos en las luces LED y en el display de 7 segmentos seguidamente. 
 - Elaborar un sistema digital del circuito decodificador utilizando lenguajes de descripción de hardware en una FPGA.
 - Construir los testbench de cada módulo para comprobar las especificaciones del diseño.
-## 4 Diseño
-### 4.1 Descripción general del funcionamiento del circuito completo y cada subsistema
+## 4. Diseño
+### 4.1. Descripción general del funcionamiento del circuito completo y cada subsistema
 #### Modulo principal 
 Se va a empezar describiendo el modulos principal
 ```SystemVerilog
@@ -172,7 +171,7 @@ Se definen las entradas y las salidas como en cada modulo anterior donde `btn_in
 
 Este modulo se encraga de habilitar cual de los segmentos se enciande deacuerdo a las unidades que se este trabajando el cual se le va a indicar si el boton enta encendido con un 1 o apagado con un 0 y en el caso de que se este trabjando con las decenas se envia las señaes para que se muestre un uno en el display.
 
-### 4.2 Diagramas de bloques de cada subsistema y su funcionamiento fundamental
+### 4.2. Diagramas de bloques de cada subsistema y su funcionamiento fundamental
 #### Segmento a
 Diagrama de bloque:
 
@@ -215,11 +214,11 @@ Diagrama de bloque:
 ![g](Imagenes/g.jpg)
 - Este segmento se enciende si bin[2] es 1, o si bin[0] es 0 y bin[3] es 1, o si bin[0] es 1 y bin[3] es 0, o si bin[1] es 0 y bin[3] es 1.
 
-### 4.3 Un ejemplo de la simplificación de las ecuaciones booleanas 
+### 4.3. Un ejemplo de la simplificación de las ecuaciones booleanas 
 ![ecuacion](Imagenes/ecuacion.jpg)
 
 
-### 4.4 Ejemplo y análisis de una simulación funcional del sistema completo, desde el estímulo de entrada hasta el manejo de los 7 segmentos.
+### 4.4. Ejemplo y análisis de una simulación funcional del sistema completo, desde el estímulo de entrada hasta el manejo de los 7 segmentos.
 
 Para comprobar el funcionamiento correcto del sistema desarrollado, se realizó la creación de un Testbench, el cual tiene como finalidad, crear una simulación del sistema, para verificar su correcto funcionamiento, esto antes de implementarlo a la FPGA. Para ello se desarrolló el módulo principal_tb con las siguientes variables declaradas como logic.
 
@@ -298,7 +297,7 @@ De ello, al darle un valor a la variable gray, el módulo principal_tb toma el v
 
 Con la herramienta de GTKwave, se logra visualizar el comportamiento de las ondas digitales, esto durante la simulación.
 
-### 4.5 Análisis de consumo de recursos en la FPGA (LUTs, FFs, etc.) y del consumo de potencia que reporta las herramientas.
+### 4.5. Análisis de consumo de recursos en la FPGA (LUTs, FFs, etc.) y del consumo de potencia que reporta las herramientas.
 
 Para realizar el análisis de consumo de recursos, fue necesario realizar la simulación del sistema, el cual muestra cuantos recursos de la FPGA se van a utilizar, al realizar la simulación se obtuvieron los siguientes datos.
 
@@ -346,13 +345,13 @@ De esto se observa los pocos recursos utilizados en la FPGA, como el nodo de ali
 
 
 
-## 5 Conclusiones
+## 5. Conclusiones
 - Al concluir con este circuito, se puede resaltar la importancia de los mapas de Karnaugh, las tablas de verdad y la funcionalidad de las compuertas lógicas, ya que fueron de gran utilidad para simplificar las ecuaciones. Estos elementos son la base y la lógica necesaria para que el circuito se pueda ejecutar correctamente.
 - Otro punto importante a destacar después de terminar este proyecto es la relevancia de saber programar en un lenguaje como el HDL. Esto permite estructurar y diseñar los circuitos electrónicos de manera que sea más fácil encontrar problemas o errores en el circuito. Además, facilita un análisis más detallado junto con una simulación realista.
 - Después de terminar el circuito decodificador, se puede concluir que el circuito funciona de manera muy eficiente, dado que el consumo por parte de la FPGA es muy bajo al utilizar bloques y nodos.
 
 
-## 6 Análisis de principales problemas hallados durante el trabajo y de las soluciones aplicadas.
+## 6. Análisis de principales problemas hallados durante el trabajo y de las soluciones aplicadas.
 A lo largo del trabajo se presentaron varios problemas, como:
 - Inicialmente, no se tenía claro por dónde empezar. A pesar de haber visto los tutoriales del asistente, no se tenía una idea clara de qué era lo que se debía hacer específicamente. Sin embargo, a medida que se explicaba en la clase y conforme se le iba preguntando al asistente, y según sus respuestas, se empezó a diseñar la primera parte de la programación en SystemVerilog.
 - Otros de los incombenientes era como programar porque apesar de que se tenia claro que era lo que se tenia que hacer aun se nesesitava escribirlo en el languaje de HDL, sin ningun funcion avansada por eso se busco en el libro, en las presentaciones que el profesor compartio y en el video tutorial del asistente para tener una idea de cuel era la extrutura que se debia seguir.Otro inconveniente fue la programación, ya que, aunque se tenía claro qué hacer, aún se necesitaba escribirlo en el lenguaje HDL sin usar funciones avanzadas. Por ello, se consultaron libros, las presentaciones compartidas por el profesor y el video tutorial del asistente para entender la estructura que se debía seguir.
