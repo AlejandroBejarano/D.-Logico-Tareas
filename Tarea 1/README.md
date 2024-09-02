@@ -31,18 +31,18 @@ module principal (
 logic [3:0] bin_todos;
 ```
 En este sección del código se inicial el `module` definiendole sus entradas y salidas
--Entradas 
+- Entradas 
 Se definen las entradas que se nesecitan donde:
-`Gray` se la van a poder ingresar 4 valores enumerador de 0 hasta 3 al igul que el `bin`.
-Se agrgo un boton `btn_in` que es el que va a activar el 1 de las decenas.
+    - `Gray` se la van a poder ingresar 4 valores enumerador de 0 hasta 3 al igul que el `bin`.
+    - Se agrgo un boton `btn_in` que es el que va a activar el 1 de las decenas.
 
-Salidas
+- Salidas
 Despues de describir la salidas donde:
-`Led` es la salida que va a presentar los numeros decodifcados del condigo Gray.
-`pin_uni` y `pin_dec` son son pines encargados de ubicar la salida de la conexion que va a tener la resistencia de la base de los trsnsistores npn.
-`a`,`b`,`c`, etc son las salidas que van a estar conectadas a los segmentos del display de la unidades.
-`bd` y `cd` son las unicas dos salidas que van a estar conectadas al display de las decenas para el uno.
-`bin_todos` es la variable interna donde se guarda el numero decodificado de Gray.
+    - `Led` es la salida que va a presentar los numeros decodifcados del condigo Gray.
+    - `pin_uni` y `pin_dec` son son pines encargados de ubicar la salida de la conexion que va a tener la resistencia de la base de los trsnsistores npn.
+    - `a`,`b`,`c`, etc son las salidas que van a estar conectadas a los segmentos del display de la unidades.
+    - `bd` y `cd` son las unicas dos salidas que van a estar conectadas al display de las decenas para el uno.
+    - `bin_todos` es la variable interna donde se guarda el numero decodificado de Gray.
 
 ```SystemVerilog
 // Instancia
@@ -107,8 +107,8 @@ Lo que hacen los `assign` es verificar si se esta trabajando con unidades o dece
 En este modulo se vuelven a definir cuales son sus entradas las cuales son `Gray` y `bin`  respectivamente. 
 
 Se definene las señales internas para codificar los bits `logic b3, b2, b1, b0`. 
--`b3` es el bit más significativo por lo que tambien va a representar el `Gray[3]`.
--`b2` es el rultado del la operacion de la compuarta XOR entre `b3` y `Gray[3]` y así sucesivamente para lo demas resultados.
+- `b3` es el bit más significativo por lo que tambien va a representar el `Gray[3]`.
+- `b2` es el rultado del la operacion de la compuarta XOR entre `b3` y `Gray[3]` y así sucesivamente para lo demas resultados.
 
 Por ultimo se concatenan para formar el número binario completo en el `bin` y finalisa el modulo.
 
@@ -356,7 +356,7 @@ De esto se observa los pocos recursos utilizados en la FPGA, como el nodo de ali
 A lo largo del trabajo se presentaron varios problemas, como:
 - Inicialmente, no se tenía claro por dónde empezar. A pesar de haber visto los tutoriales del asistente, no se tenía una idea clara de qué era lo que se debía hacer específicamente. Sin embargo, a medida que se explicaba en la clase y conforme se le iba preguntando al asistente, y según sus respuestas, se empezó a diseñar la primera parte de la programación en SystemVerilog.
 - Otros de los incombenientes era como programar porque apesar de que se tenia claro que era lo que se tenia que hacer aun se nesesitava escribirlo en el languaje de HDL, sin ningun funcion avansada por eso se busco en el libro, en las presentaciones que el profesor compartio y en el video tutorial del asistente para tener una idea de cuel era la extrutura que se debia seguir.Otro inconveniente fue la programación, ya que, aunque se tenía claro qué hacer, aún se necesitaba escribirlo en el lenguaje HDL sin usar funciones avanzadas. Por ello, se consultaron libros, las presentaciones compartidas por el profesor y el video tutorial del asistente para entender la estructura que se debía seguir.
--Después, se presentaron errores de sintaxis, los cuales fueron más tediosos porque no se sabía exactamente dónde estaban ubicados. Para resolverlos, se realizaron copias del código que sí funcionaba y se empezaron a hacer ajustes en las partes que presentaban errores.
+- Después, se presentaron errores de sintaxis, los cuales fueron más tediosos porque no se sabía exactamente dónde estaban ubicados. Para resolverlos, se realizaron copias del código que sí funcionaba y se empezaron a hacer ajustes en las partes que presentaban errores.
 - Finalmente, al crear el circuito físico, uno de los principales problemas fue que, en la lógica del diagrama del profesor, se trabajó con un display de ánodo común, pero en nuestro caso se nos proporcionó uno de cátodo común. Dado que ya se habían comprado todos los materiales para armar el circuito, surgieron dos opciones: buscar otros displays y trabajar con el transistor PNP, además de ajustar las ecuaciones, ya que estaban calculadas para un cátodo común, o volver a comprar un transistor NPN y simplemente reemplazar el anterior. Al final, se optó por la segunda opción porque se consideró que era la más viable.
 
 ## 7. Referencias
