@@ -56,8 +56,8 @@ binary_leds b_to_l_inst (
    .Led(Led)
 );
 
-assign pin_uni = btn_in ? 1'b0 : 1'b1;
-assign pin_dec = btn_in ? 1'b1 : 1'b0;
+assign pin_uni = btn_in ? 1'b1 : 1'b0;
+assign pin_dec = btn_in ? 1'b0 : 1'b1;
 
 
 decodificador_siete decodificador_unidades_inst (
