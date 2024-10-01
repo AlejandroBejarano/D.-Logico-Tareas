@@ -40,17 +40,17 @@ IO_PORT "led[5]" DRIVE=8 IO_TYPE=LVCMOS18;
 //Header_physical_ports
 //DRIVE: current in mA (4, 8, 16 or 24), //PULL_MODE: ensure a known state for a signal (GND or VCC), //IO_TYPE: LVCMOS33/LVCMOS18 voltage (3.3 or 1.8)
 //Any header on the board can be used, in this section there are only those that are not used by the boards interfaces, for example, HDMI. To use any port you just have to follow the format.
-IO_LOC "port25" 25;
-IO_LOC "port25" DRIVE=8 IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
+IO_LOC "col_0" 25;
+IO_LOC "col_0" DRIVE=8 IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
 
-IO_LOC "port26" 26;
-IO_LOC "port26" DRIVE=8 IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
+IO_LOC "col_1" 26;
+IO_LOC "col_1" DRIVE=8 IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
 
-IO_LOC "port27" 27;
-IO_LOC "port27" DRIVE=8 IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
+IO_LOC "col_2" 27;
+IO_LOC "col_2" DRIVE=8 IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
 
-IO_LOC "port28" 28;
-IO_LOC "port28" DRIVE=8 IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
+IO_LOC "col_3" 28;
+IO_LOC "col_3" DRIVE=8 IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
 
 IO_LOC "port29" 29;
 IO_LOC "port29" DRIVE=8 IO_TYPE=LVCMOS33 PULL_MODE=DOWN;
@@ -115,19 +115,6 @@ IO_PORT "uartTx" IO_TYPE=LVCMOS33 PULL_MODE=UP;
 IO_LOC  "uartRx" 18;
 IO_PORT "uartRx" IO_TYPE=LVCMOS33 PULL_MODE=UP;
 
-
-//HDMI_interface
-IO_LOC  "hdmiTmdsData[0]" 71,70;
-IO_PORT "hdmiTmdsData[0]" DRIVE=8;
-
-IO_LOC  "hdmiTmdsData[1]" 73,72;
-IO_PORT "hdmiTmdsData[1]" DRIVE=8;
-
-IO_LOC  "hdmiTmdsData[2]" 75,74;
-IO_PORT "hdmiTmdsData[2]" DRIVE=8;
-
-IO_LOC  "hdmiTmdsClk" 69,68;
-IO_PORT "hdmiTmdsClk" DRIVE=8;
 
 
 //SPI_LCD_interface
