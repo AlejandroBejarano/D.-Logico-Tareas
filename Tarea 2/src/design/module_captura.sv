@@ -41,7 +41,8 @@ module segunda_parte (
             end
         end
     end
-// Maquina de estado para el control de datos
+// Maquina de estado para el control de datos del teclado 
+ 
 typedef enum logic [2:0] {SO, S1, S2} statetype;
 statetype state, nextstate;
 //stateregister 
