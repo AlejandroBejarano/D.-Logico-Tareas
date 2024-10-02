@@ -1,6 +1,6 @@
 module general (
-    input logic clk;
-    input logic rst;
+    input logic clk,
+    input logic rst
 );
 endmodule 
 
@@ -13,7 +13,7 @@ module capturador_de_teclas(
     input logic col_1, 
     input logic col_2, 
     input logic col_3,
-
+ 
 
     output logic [3:0]tecla_pre, 
     output logic suma,     
@@ -309,8 +309,8 @@ module almacenamiento_datos (
     input logic cargar_numero1,    
     input logic cargar_numero2,    
     input logic reset_datos,       
-    output logic [3:0] numero1[2:0],  
-    output logic [3:0] numero2[2:0],
+    output logic [11:0] numero1,  
+    output logic [11:0] numero2
 );
 
     logic [1:0] indice_numero1; 
@@ -321,33 +321,42 @@ module almacenamiento_datos (
             // Inicializa los valores
             indice_numero1 <= 0;
             indice_numero2 <= 0;
-            numero1[0] <= 0;
-            numero1[1] <= 0;
-            numero1[2] <= 0;
-            numero2[0] <= 0;
-            numero2[1] <= 0;
-            numero2[2] <= 0;
+            numero1 <= 12'b0;
+            numero2 <= 12'b0;
         end else begin
             if (reset_datos) begin
-                // Reinicia los números
-                numero1[0] <= 0;
-                numero1[1] <= 0;
-                numero1[2] <= 0;
-                numero2[0] <= 0;
-                numero2[1] <= 0;
-                numero2[2] <= 0;
+                numero1 <= 12'b0;
+                numero2 <= 12'b0;
                 indice_numero1 <= 0;
                 indice_numero2 <= 0;
             end else begin
                 if (cargar_numero1) begin
-                    // Cargar el primer número
-                    numero1[indice_numero1] <= tecla_pre;
-                    indice_numero1 <= indice_numero1 + 1;
+                    case (indice_numero1)
+                        2'b00: numero1[3:0]   <= tecla_pre;
+                        2'b01: numero1[7:4]   <= tecla_pre;
+                        2'b10: numero1[11:8]  <= tecla_pre;
+                        default: ; // Agregar un caso por defecto para manejar índices no válidos
+                    endcase
+                    // Incrementar índice y reiniciar si es necesario
+                    if (indice_numero1 < 2'b10) begin
+                        indice_numero1 <= indice_numero1 + 1;
+                    end else begin
+                        indice_numero1 <= 0; // Reinicia si se supera el límite
+                    end
                 end else if (cargar_numero2) begin
-                    // Cargar el segundo número
-                    numero2[indice_numero2] <= tecla_pre;
-                    indice_numero2 <= indice_numero2 + 1;
-                end
+                    case (indice_numero2)
+                        2'b00: numero2[3:0]   <= tecla_pre;
+                        2'b01: numero2[7:4]   <= tecla_pre;
+                        2'b10: numero2[11:8]  <= tecla_pre;
+                        default: ; // Agregar un caso por defecto para manejar índices no válidos
+                    endcase
+                    // Incrementar índice y reiniciar si es necesario
+                    if (indice_numero2 < 2'b10) begin
+                        indice_numero2 <= indice_numero2 + 1;
+                    end else begin
+                        indice_numero2 <= 0; // Reinicia si se supera el límite
+                    end
+                end 
             end
         end
     end
@@ -420,53 +429,97 @@ module maquina_estado (
 
 endmodule
 
-module binaria_segmentos(
-
-   input logic [3:0] bin,
-   output logic a, b, c, d, e, f, g
+//  Module para los 4 display con los dos numeros de 3 digitos
+module display(
+   input logic rst,
+   input logic clk,
+   input logic a,
+   input logic b,
+   input logic [11:0] numero1,  
+   input logic [11:0] numero2,  
+   output logic [3:0] an,
+   output logic [6:0] seg
 );
 
-   assign a = ~((~bin[1] & ~bin[3]) | (bin[1] & bin[3]) | bin[2] | bin[0]);
-   assign b = ~((~bin[0] & ~bin[1]) | (~bin[3]) | (bin[0] & bin[1]));
-   assign c = ~(~bin[0] | bin[3] | bin[1]);
-   assign d = ~((~bin[1] & ~bin[3]) | (~bin[0] & bin[1] & bin[3]) | (bin[0] & ~bin[1]) | (bin[0] & ~bin[3]));
-   assign e = ~((~bin[1] & ~bin[3]) | (bin[0] & ~bin[1]));
-   assign f = ~((~bin[0] & ~bin[1]) | (~bin[0] & bin[3]) | bin[2] | (~bin[1] & bin[3]));
-   assign g = ~(bin[2] | (~bin[0] & bin[3]) | (bin[0] & ~bin[3]) | (~bin[1] & bin[3]));
+    // Declaración de constantes
+    localparam N = 18; 
 
-endmodule
+    // Declaraciones de señales internas
+    logic [N-1:0] q_reg;
+    logic [N-1:0] q_next;
+    logic [3:0] numero1_in;
+    logic [3:0] numero2_in;
 
 
-);
+    always_ff @(posedge clk or posedge rst) begin 
+        if (rst)
+            q_reg <= 0;
+        else 
+            q_reg <= q_next;
+    end 
 
-endmodule
-/*
-//Sincronizacion a 27 Mhz
-    parameter int frecuencia = 27000000;
-    parameter int freq_out = 10000;
-    parameter int max_count = frecuencia / (2 * freq_out);
+    assign q_next = q_reg + 1;
 
-    logic [8:0] count;
 
-    // Inicialización de variables
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
-            count <= 0;
-            clk_out <= 0;
-        end else begin
-            if (count == max_count) begin
-                clk_out <= ~clk_out;
-                count <= 0;
-            end else begin
-                count <= count + 1;
-            end
+    // Inicio del contador y selección del dígito
+    always_comb begin 
+        if (state == cargar_numero1) begin 
+            case (q_reg[N-1:N-2])
+                2'b00: begin 
+                    an = 4'b1110;
+                    numero1_in = numero1[3:0];    // Parte baja del vector numero1
+                end 
+                2'b01: begin
+                    an = 4'b1101;
+                    numero1_in = numero1[7:4];    // Parte media del vector numero1
+                end 
+                2'b10: begin 
+                    an = 4'b1011;
+                    numero1_in = numero1[11:8];   // Parte alta del vector numero1
+                end 
+                default: begin 
+                    an = 4'b0111;  // No se usa el último display
+                    numero1_in = 4'b0000;  // Vacío
+                end 
+            endcase 
+        end else if (state == cargar_numero2) begin
+            case (q_reg[N-1:N-2])
+                2'b00: begin 
+                    an = 4'b1110;
+                    numero2_in = numero2[3:0];    // Parte baja del vector numero2
+                end 
+                2'b01: begin
+                    an = 4'b1101;
+                    numero2_in = numero2[7:4];    // Parte media del vector numero2
+                end 
+                2'b10: begin 
+                    an = 4'b1011;
+                    numero2_in = numero2[11:8];   // Parte alta del vector numero2
+                end 
+                default: begin 
+                    an = 4'b1111;  // No se usa este display
+                    numero2_in = 4'b0000;  // Vacío
+                end 
+            endcase      
         end
-    end
-
-*/
+    end 
 
 
+    always_comb begin
+        logic [3:0] numero_actual_in;
+        if (rst) begin 
+            numero_actual_in = 4'h0;
+        end else begin
+            // Selecciona entre numero1 y numero2
+            if (state == cargar_numero1) begin 
+                numero_actual_in = numero1_in;
+            end
+        end 
+    end 
+endmodule 
 
+
+ 
 /*Ocupamos:
 Modulo #1
 1. El escaneo de filas

@@ -26,8 +26,5 @@ module divisor_tb;
     
         #10000 $finish;
     end
-
-
     
-
 endmodule
