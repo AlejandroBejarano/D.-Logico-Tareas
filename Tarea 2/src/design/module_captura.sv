@@ -1,82 +1,10 @@
 module general (
     input logic clk;
     input logic rst;
-    input logic [0:2] numero1,
-    input logic [0:2] numero2,
 );
 endmodule 
 
 //4.1
-module segunda_parte (
-    // Segunda parte FSM (Sincronización y Máquina de estado)
-    // a tecla para sumar, b tlecla para igualar y c tecla para eliminar
-    input logic clk,
-    input logic rst,
-    input logic [0:2] numero1
-    input logic [0:2] numero2
-    input logic a
-    input logic b
-    input logic c
-    output logic igual
-    output logic clk_out,
-);
-//Sincronizacion a 27 Mhz
-    parameter int frecuencia = 27000000;
-    parameter int freq_out = 10000;
-    parameter int max_count = frecuencia / (2 * freq_out);
-
-    logic [8:0] count;
-
-    // Inicialización de variables
-    always_ff @(posedge clk or posedge rst) begin
-        if (rst) begin
-            count <= 0;
-            clk_out <= 0;
-        end else begin
-            if (count == max_count) begin
-                clk_out <= ~clk_out;
-                count <= 0;
-            end else begin
-                count <= count + 1;
-            end
-        end
-    end
-// Maquina de estado para el control de datos del teclado 
- 
-typedef enum logic [2:0] {SO, S1, S2} statetype;
-statetype state, nextstate;
-//stateregister 
-always_ff@(posedge clk or posedge rst) begin
-    if (rst) begin 
-        state <= S0;
-        //almacena el numero capturado en el teclado en el vector [2:0] numero1
-    end else begin 
-        state <= nextstate;
-    end 
-end 
-//next state logic 
-S0: if (a) nextstate=SO;
-    else   nextstate=S1;
-S1: if (b) nextstate=S2;
-    else   nextstate=S0;
-S2: if (c) nextstate=S0;
-default: nextstate=S0
-endcase 
-// Output Logic
-assign igual = (S0 + S1 == S2);
-
-endmodule
-
-
-
-
-
-
-
-
-//*****************************************
-
-
 
 module capturador_de_teclas(
     input logic clk,
@@ -146,10 +74,6 @@ module capturador_de_teclas(
 
 endmodule
 
-
-
-
-
 module cont_anillo(
     input logic clk,
     input logic rst,
@@ -174,9 +98,6 @@ logic [3:0]fila_encendida;
     //Se le asigna la salida.
     assign fila = fila_encendida;
 endmodule
-
-
-
 
 module detector_columna (
     input logic clk,
@@ -276,8 +197,6 @@ module detector_columna (
         endcase     
     end 
 
-
-
     //Detectar estado y asignar codigo binario al estado para saber las teclas en binario
     always_ff @(posedge clk) begin 
         if (rst)begin 
@@ -314,9 +233,6 @@ module detector_columna (
     assign igual = (tecla_pre == 4'b0111);
 
 endmodule
-
-
-
 
 
 module divisor (
@@ -386,7 +302,168 @@ endmodule
 
 //***************************************
 
+module almacenamiento_datos (
+    input logic clk,
+    input logic rst,
+    input logic [3:0] tecla_pre,   
+    input logic cargar_numero1,    
+    input logic cargar_numero2,    
+    input logic reset_datos,       
+    output logic [3:0] numero1[2:0],  
+    output logic [3:0] numero2[2:0],
+);
 
+    logic [1:0] indice_numero1; 
+    logic [1:0] indice_numero2; 
+
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            // Inicializa los valores
+            indice_numero1 <= 0;
+            indice_numero2 <= 0;
+            numero1[0] <= 0;
+            numero1[1] <= 0;
+            numero1[2] <= 0;
+            numero2[0] <= 0;
+            numero2[1] <= 0;
+            numero2[2] <= 0;
+        end else begin
+            if (reset_datos) begin
+                // Reinicia los números
+                numero1[0] <= 0;
+                numero1[1] <= 0;
+                numero1[2] <= 0;
+                numero2[0] <= 0;
+                numero2[1] <= 0;
+                numero2[2] <= 0;
+                indice_numero1 <= 0;
+                indice_numero2 <= 0;
+            end else begin
+                if (cargar_numero1) begin
+                    // Cargar el primer número
+                    numero1[indice_numero1] <= tecla_pre;
+                    indice_numero1 <= indice_numero1 + 1;
+                end else if (cargar_numero2) begin
+                    // Cargar el segundo número
+                    numero2[indice_numero2] <= tecla_pre;
+                    indice_numero2 <= indice_numero2 + 1;
+                end
+            end
+        end
+    end
+
+endmodule
+
+
+module maquina_estado (
+    input logic clk,
+    input logic rst,
+    input logic a,   // Tecla para sumar
+    input logic b,   // Tecla para igualar
+    input logic c,   // Tecla para eliminar
+    input logic [3:0] tecla_pre,
+    output logic cargar_numero1,  
+    output logic cargar_numero2,  
+    output logic rst_datos,     
+    output logic igual,           
+    output logic clk_out
+);
+
+    // Definición de estados
+    typedef enum logic [1:0] {S0, S1, S2} statetype;
+    statetype state, nextstate;
+
+    // Registro de estado
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            state <= S0;
+        end else begin
+            state <= nextstate;
+        end
+    end
+
+    // Lógica de cambio de estado
+    always_comb begin
+        nextstate = state; 
+        cargar_numero1 = 0;
+        cargar_numero2 = 0;
+        reset_datos = 0;
+        igual = 0;
+
+        case (state)
+            S0: begin
+                if (a) begin
+                    cargar_numero1 = 1; 
+                    nextstate = S1;
+                end else if (c) begin
+                    reset_datos = 1; 
+                end
+            end
+            S1: begin
+                if (a) begin
+                    cargar_numero2 = 1; 
+                    nextstate = S2;
+                end else if (c) begin
+                    reset_datos = 1; 
+                    nextstate = S0;
+                end
+            end
+            S2: begin
+                igual = 1; // Señal de igual cuando se llega al estado S2
+                if (c) begin
+                    reset_datos = 1; // Reiniciar datos cuando se presiona 'c'
+                    nextstate = S0;
+                end
+            end
+        endcase
+    end
+
+endmodule
+
+module binaria_segmentos(
+
+   input logic [3:0] bin,
+   output logic a, b, c, d, e, f, g
+);
+
+   assign a = ~((~bin[1] & ~bin[3]) | (bin[1] & bin[3]) | bin[2] | bin[0]);
+   assign b = ~((~bin[0] & ~bin[1]) | (~bin[3]) | (bin[0] & bin[1]));
+   assign c = ~(~bin[0] | bin[3] | bin[1]);
+   assign d = ~((~bin[1] & ~bin[3]) | (~bin[0] & bin[1] & bin[3]) | (bin[0] & ~bin[1]) | (bin[0] & ~bin[3]));
+   assign e = ~((~bin[1] & ~bin[3]) | (bin[0] & ~bin[1]));
+   assign f = ~((~bin[0] & ~bin[1]) | (~bin[0] & bin[3]) | bin[2] | (~bin[1] & bin[3]));
+   assign g = ~(bin[2] | (~bin[0] & bin[3]) | (bin[0] & ~bin[3]) | (~bin[1] & bin[3]));
+
+endmodule
+
+
+);
+
+endmodule
+/*
+//Sincronizacion a 27 Mhz
+    parameter int frecuencia = 27000000;
+    parameter int freq_out = 10000;
+    parameter int max_count = frecuencia / (2 * freq_out);
+
+    logic [8:0] count;
+
+    // Inicialización de variables
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            count <= 0;
+            clk_out <= 0;
+        end else begin
+            if (count == max_count) begin
+                clk_out <= ~clk_out;
+                count <= 0;
+            end else begin
+                count <= count + 1;
+            end
+        end
+    end
+
+*/
 
 
 
@@ -397,8 +474,7 @@ Modulo #1
 3. Eliminar el rebote mecánico 
 Modulo #2
 4. Luego sincronizarlo a 27MHz
-5.
-6. La maquina de estado
+5. La maquina de estado
 Modulo #3
-7. Conversión del número a binario para la suma y los 7-segmentos
+6. Conversión del número a binario para la suma y los 7-segmentos
 */
