@@ -1,8 +1,91 @@
-module general (
+module sistema_calculadora (
     input logic clk,
-    input logic rst
+    input logic rst,
+    input logic col_0, 
+    input logic col_1, 
+    input logic col_2, 
+    input logic col_3,
+    output logic [3:0]fila,
+    output logic [3:0] an,       // Para los displays
+    output logic [6:0] seg,      // Para los segmentos del display a,b,c,d,e,f,g
+    output logic [13:0] resultado // Resultado de la suma
 );
-endmodule 
+
+    // Interconexiones entre módulos
+    logic [3:0] tecla_pre;
+    logic suma, igual;
+    logic clk_div;
+    
+    // Señales para almacenar números
+    logic [11:0] numero1, numero2;
+    logic cargar_numero1, cargar_numero2, reset_datos;
+
+    // Instanciación de los módulos
+    capturador_de_teclas capturador_inst(
+        .clk(clk),
+        .rst(rst),
+        .col_0(col_0),
+        .col_1(col_1),
+        .col_2(col_2),
+        .col_3(col_3),
+        .fila_ent(fila),
+        .tecla_pre(tecla_pre),
+        .suma(suma),
+        .igual(igual)
+    );
+
+    almacenamiento_datos almacenamiento_inst(
+        .clk(clk),
+        .rst(rst),
+        .tecla_pre(tecla_pre),
+        .cargar_numero1(cargar_numero1),
+        .cargar_numero2(cargar_numero2),
+        .reset_datos(reset_datos),
+        .numero1(numero1),
+        .numero2(numero2)
+    );
+
+    maquina_estado maquina_inst(
+        .clk(clk),
+        .rst(rst),
+        .a(suma),
+        .b(igual),
+        .c(1'b0), // Conectar a la tecla de eliminar si la tienes
+        .tecla_pre(tecla_pre),
+        .cargar_numero1(cargar_numero1),
+        .cargar_numero2(cargar_numero2),
+        .rst_datos(reset_datos)
+    );
+
+    // Instanciar el módulo de suma
+    SumaAri suma_inst(
+        .clk(clk),
+        .rst(rst),
+        .num1(numero1),
+        .num2(numero2),
+        .sum(resultado)
+    );
+
+    // Instanciar el módulo de display
+    display display_inst(
+        .rst(rst),
+        .clk(clk),
+        .a(cargar_numero1),  // Cambia según tu lógica de visualización
+        .b(cargar_numero2),
+        .numero1(numero1),
+        .numero2(numero2),
+        .an(an),
+        .seg(seg)
+    );
+
+endmodule
+
+
+
+
+
+
+
 
 //4.1
 
@@ -14,13 +97,12 @@ module capturador_de_teclas(
     input logic col_2, 
     input logic col_3,
  
-
+    input logic [3:0]fila_ent,
     output logic [3:0]tecla_pre, 
     output logic suma,     
     output logic igual
 );
 
-    logic [3:0]fila_ent;
     logic clk_div;
     logic col_00;
     logic col_11;
@@ -32,6 +114,8 @@ module capturador_de_teclas(
         .rst(rst),
         .fila(fila_ent)
     );
+
+
 
     rebote rebote_ins0(
         .clk(clk),
@@ -449,8 +533,9 @@ module display(
     logic [N-1:0] q_next;
     logic [3:0] numero1_in;
     logic [3:0] numero2_in;
+    logic [3:0] numero_actual_in; // Sección de salida actual
 
-
+    // Registro del contador
     always_ff @(posedge clk or posedge rst) begin 
         if (rst)
             q_reg <= 0;
@@ -460,63 +545,107 @@ module display(
 
     assign q_next = q_reg + 1;
 
-
     // Inicio del contador y selección del dígito
     always_comb begin 
-        if (state == cargar_numero1) begin 
+        // Asignar por defecto para evitar latch
+        an = 4'b1111; // Apagar todos los displays
+        numero1_in = 4'b0000; // Vacío
+        numero2_in = 4'b0000; // Vacío
+
+        if (rst) begin
+            // Si el reset está activo, todas las salidas se apagan
+            an = 4'b1111;
+            numero1_in = 4'b0000;
+            numero2_in = 4'b0000;
+        end else if (a) begin 
             case (q_reg[N-1:N-2])
                 2'b00: begin 
                     an = 4'b1110;
-                    numero1_in = numero1[3:0];    // Parte baja del vector numero1
+                    numero1_in = numero1[3:0]; // Parte baja del vector numero1
                 end 
                 2'b01: begin
                     an = 4'b1101;
-                    numero1_in = numero1[7:4];    // Parte media del vector numero1
+                    numero1_in = numero1[7:4]; // Parte media del vector numero1
                 end 
                 2'b10: begin 
                     an = 4'b1011;
-                    numero1_in = numero1[11:8];   // Parte alta del vector numero1
-                end 
-                default: begin 
-                    an = 4'b0111;  // No se usa el último display
-                    numero1_in = 4'b0000;  // Vacío
+                    numero1_in = numero1[11:8]; // Parte alta del vector numero1
                 end 
             endcase 
-        end else if (state == cargar_numero2) begin
+        end else if (b) begin
             case (q_reg[N-1:N-2])
                 2'b00: begin 
                     an = 4'b1110;
-                    numero2_in = numero2[3:0];    // Parte baja del vector numero2
+                    numero2_in = numero2[3:0]; // Parte baja del vector numero2
                 end 
                 2'b01: begin
                     an = 4'b1101;
-                    numero2_in = numero2[7:4];    // Parte media del vector numero2
+                    numero2_in = numero2[7:4]; // Parte media del vector numero2
                 end 
                 2'b10: begin 
                     an = 4'b1011;
-                    numero2_in = numero2[11:8];   // Parte alta del vector numero2
-                end 
-                default: begin 
-                    an = 4'b1111;  // No se usa este display
-                    numero2_in = 4'b0000;  // Vacío
+                    numero2_in = numero2[11:8]; // Parte alta del vector numero2
                 end 
             endcase      
         end
     end 
 
-
+    // Asignación de la señal de número actual para la visualización
     always_comb begin
-        logic [3:0] numero_actual_in;
         if (rst) begin 
-            numero_actual_in = 4'h0;
+            numero_actual_in = 4'b0000; // Reset en caso de reinicio
+        end else if (a) begin 
+            numero_actual_in = numero1_in; // Mostrar número 1
+        end else if (b) begin
+            numero_actual_in = numero2_in; // Mostrar número 2
         end else begin
-            // Selecciona entre numero1 y numero2
-            if (state == cargar_numero1) begin 
-                numero_actual_in = numero1_in;
-            end
+            numero_actual_in = 4'b0000; // Valor por defecto
         end 
     end 
-endmodule 
+
+    // Aquí puedes agregar la lógica para convertir `numero_actual_in` a segmentos `seg`
+    // Ejemplo de conversión (solo como placeholder, debes ajustarlo a tu lógica de segmentos)
+    always_comb begin
+        case (numero_actual_in)
+            4'd0: seg = 7'b0000001; // '0'
+            4'd1: seg = 7'b1001111; // '1'
+            4'd2: seg = 7'b0010010; // '2'
+            4'd3: seg = 7'b0000110; // '3'
+            4'd4: seg = 7'b1001100; // '4'
+            4'd5: seg = 7'b0100100; // '5'
+            4'd6: seg = 7'b0100000; // '6'
+            4'd7: seg = 7'b0001111; // '7'
+            4'd8: seg = 7'b0000000; // '8'
+            4'd9: seg = 7'b0000100; // '9'
+            default: seg = 7'b1111111; // Off
+        endcase
+    end 
+
+endmodule
+
+
+
+
+module SumaAri (
+    input logic clk,           // Señal de reloj
+    input logic rst,         // Señal de reset activa baja
+    input logic [11:0] num1,   // Primer número de entrada (3 dígitos decimales)
+    input logic [11:0] num2,   // Segundo número de entrada (3 dígitos decimales)
+    output logic [13:0] sum    // Resultado de la suma (máximo 4 dígitos decimales)
+);
+
+    always_ff @(posedge clk or negedge rst) begin
+        if (!rst) begin
+            sum <= 14'd0; // Resetear el resultado de la suma
+        end else begin
+            sum <= num1 + num2; // Realizar la suma aritmética
+        end
+    end
+
+endmodule
+
+
+
 
 
  
