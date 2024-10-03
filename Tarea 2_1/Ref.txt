@@ -1,0 +1,18 @@
+Contador de anillo
+1. https://www.todopic.com.ar/foros/index.php?topic=32327.msg272414#msg272414
+2.https://docs.amd.com/r/en-US/ug901-vivado-synthesis/Auto-State-Encoding
+3.https://docs.amd.com/r/en-US/ug901-vivado-synthesis/FSM-Example-Verilog
+
+FSM detector de columna
+1.https://vlsiweb.com/finite-state-machines-in-verilog/
+
+divisor
+1.https://www.youtube.com/watch?v=sLz8vAvoils
+2.https://idielectronica.blogspot.com/2014/06/verilog-divisor-de-reloj.html
+
+rebote
+1. https://www.fpga4student.com/2017/04/simple-debouncing-verilog-code-for.html
+
+revisar
+https://fpgacoding.com/pmod-keypad-peripheral-first-look/
+https://circuitdigest.com/microcontroller-projects/raspberry-pi-4-digit-7-segment-display-module
