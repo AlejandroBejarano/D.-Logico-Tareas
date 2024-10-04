@@ -308,8 +308,6 @@ En el Anexo 8.3 se puede observar el testbench del modulo del rebote mecánico, 
 ![h](Fotos/h.png)
 
 
-
-
 Se realizó el módulo capturador de teclas, donde se instancian todos los módulos anteriores, obteniendo un solo bloque para manipular el subsistema de capturar las teclas.
 
 ```SystemVerilog
@@ -374,7 +372,21 @@ module capturador_de_teclas(
     );
 endmodule
 ```
+En el Anexo 8.4 se puede observar el testbench de módulo capturador de teclas, en las siguientes imágenes se observa cómo se detecta el pulso de botón de salida pasando por el módulo de rebote y como se detecta la tecla presionada.
 
+![I](Fotos/I.png)
+
+![J](Fotos/J.png)
+
+Para el análisis de consumo de recursos en la FPGA y del consumo de potencia que reportan las herramientas, los siguientes valores generados con el make synth y make pnr.
+
+![K](Fotos/K.png)
+
+![L](Fotos/L.png)
+
+De esto, se destacan el consumo de recursos lógicos en la FPGA, como lo son los look-up-tables (LUTs), estos corresponde a el tamaño de tablas de búsqueda utilizadas, donde se implementa el sistema de capturar las teclas, se destacan 17 LUT 1, que utiliza una entrada y funciones simples, 17 LUT 2, que utiliza dos entradas y funciones AND, OR, XOR, 9 LUT 3, con tres entradas y 40 LUT 4 con cuatro entradas para realizar funciones más complejas, además se tienen los Wires, que se utilizan 218, que corresponden a conexiones internas que ocupan 372 bits, y 20 ALU que corresponden a unidades aritméticas lógicas para realizar operaciones lógicas o matemáticas, además se utilizaron flip-flops D, para almacenar estados, como también la utilización de varios multiplexores.
+
+Además se observa la utilización de una fuente de alimentación VCC, 145  SLICE (unidades de lógica configurables) que contienen LUTs y flip-flops para la implementación de funciones lógicas y secuenciales, 12 IOB (bloques de entrada y salida) y 1 GSR (global set/reset).
 
 
 
@@ -482,11 +494,17 @@ module mi_modulo(
 
 ## 7. Referencias
 [0] David Harris y Sarah Harris. *Digital Design and Computer Architecture. RISC-V Edition.* Morgan Kaufmann, 2022. ISBN: 978-0-12-820064-3
+
 [1] R. Gorla and R. Gorla, “Finite state machines in Verilog,” VLSI WEB, Apr. 12, 2024. https://vlsiweb.com/finite-state-machines-in-verilog/
+
 [2] “AMD Technical Information Portal.” https://docs.amd.com/r/en-US/ug901-vivado-synthesis/FSM-Example-Verilog
+
 [3] Luis Vargas. “Ejemplos verilog.” https://www.todopic.com.ar/foros/index.php?topic=32327.msg272414#msg272414
+
 [4] S. P. Lung, “Divisor de Reloj en Verilog.” https://idielectronica.blogspot.com/2014/06/verilog-divisor-de-reloj.html
+
 [5] Oscar Martínez. Tutorías con Ingenio Universidad Nacional, “Divisor de frecuencia en Verilog,” YouTube. Oct. 29, 2016. [Online]. Available: https://www.youtube.com/watch?v=sLz8vAvoils
+
 [6] “Verilog code for debouncing buttons on FPGA,” FPGA4student.com. https://www.fpga4student.com/2017/04/simple-debouncing-verilog-code-for.html
 
 
@@ -709,3 +727,92 @@ endmodule
 
 
 Para este testbench se trata de generar pulsos con ruido antes y después de un pulso de mayor duración.
+
+
+### 8.4 Testbench capturador de teclas
+
+```SystemVerilog
+module capturador_de_teclas_tb;
+
+    logic clk;
+    logic rst;
+    logic col_0;
+    logic col_1;
+    logic col_2;
+    logic col_3;
+
+    logic [3:0] tecla_pre;
+    logic suma;
+    logic igual;
+
+    capturador_de_teclas capturador_de_teclas_tbb(
+        .clk(clk),
+        .rst(rst),
+        .col_0(col_0),
+        .col_1(col_1),
+        .col_2(col_2),
+        .col_3(col_3),
+        .tecla_pre(tecla_pre),
+        .suma(suma),
+        .igual(igual)
+    );
+    initial begin
+        clk = 0;
+        forever #18.5 clk = ~clk;
+    end
+
+    initial begin
+
+        rst = 1;
+        col_0 = 0;
+        col_1 = 0;
+        col_2 = 0;
+        col_3 = 0;
+
+        #20;
+        rst = 0;
+
+        #30 col_0 = 1;
+        #5 col_0 = 0;
+        #5 col_0 = 1;
+        #1 col_0 = 0;
+        #5 col_0 = 1;
+        #3 col_0 = 0;
+        #3 col_0 = 1;
+        #200 col_0 = 0;
+        #2 col_0 = 1;
+        #200 col_0 = 0;
+        #5 col_0 = 1;
+        #3 col_0 = 0;
+
+        #30 col_1 = 1;
+        #5 col_1 = 0;
+        #30 col_1 = 1;
+        #30 col_1 = 0;
+        #3 col_1 = 1;
+        #4 col_1 = 0;
+
+        #30 col_2 = 1;
+        #4 col_2 = 0;
+        #30 col_2 = 1;
+        #30 col_2 = 0;
+        #5 col_2 = 1;
+        #3 col_2 = 0;
+
+        #30 col_3 = 1;
+        #5 col_3 = 0;
+        #5 col_3 = 1;
+        #30 col_3 = 0;
+        #4 col_3 = 1;
+        #30 col_3 = 0;
+
+        #100;
+        $finish;
+    end
+    initial begin
+        $monitor("Time=%0t | tecla_pre=%b | suma=%b | igual=%b", $time, tecla_pre, suma, igual);
+    end
+endmodule
+```
+
+En este código primero se declaran las variables a utilizar, y seguidamente se instancia el módulo de capturador de teclas, luego se asignan valores a pulsos provocados por activaciones de columnas y tratar de generar ruido para su correcto funcionamiento.

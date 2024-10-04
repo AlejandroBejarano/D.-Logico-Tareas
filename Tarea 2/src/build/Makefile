@@ -18,9 +18,9 @@ SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv 
 #TESTBENCH = ../sim/detector_tb.sv
 #TESTBENCH = ../sim/divisor_tb.sv
 #TESTBENCH = ../sim/rebote_tb.sv
-#TESTBENCH = ../sim/capturador_de_teclas_tb.sv
+TESTBENCH = ../sim/capturador_de_teclas_tb.sv
 #TESTBENCH = ../sim/SumaAri_tb.sv
-TESTBENCH = ../sim/sistema_calcu_tb.sv
+#TESTBENCH = ../sim/sistema_calcu_tb.sv
 
 # Constraints para el proyecto
 #aca va el archivo de constraints del proyecto
@@ -33,20 +33,20 @@ CONSTRAINTS = ../constr/constr.cst
 #TOP_TB     = divisor_tb
 #TOP_DESIGN = rebote
 #TOP_TB     = rebote_tb
-#TOP_DESIGN = capturador_de_teclas
-#TOP_TB     = capturador_de_teclas_tb
+TOP_DESIGN = capturador_de_teclas
+TOP_TB     = capturador_de_teclas_tb
 #TOP_DESIGN = SumaAri
 #TOP_TB     = SumaAri_tb
-TOP_DESIGN = sistema_calculadora 
-TOP_TB = sistema_calcu_tb
+#TOP_DESIGN = sistema_calculadora 
+#TOP_TB = sistema_calcu_tb
 
 #nombre del vcd que va a generar el tb
 #VCD_FILE = module_divisor_tb.vcd
 #VCD_FILE = module_rebote_tb.vcd
 #VCD_FILE = module_detector_tb.vcd
-#VCD_FILE = module_capturador_de_teclas_tb.vcd
+VCD_FILE = module_capturador_de_teclas_tb.vcd
 #VCD_FILE = SumaAri.vcd
-VCD_FILE = module_sistema_calcu_tb.vcd
+#VCD_FILE = module_sistema_calcu_tb.vcd
 
 all: synth pnr bitstream load
 
