@@ -1,26 +1,25 @@
-# Diseño digital sincrónico de una suma aritmética en un HDL.
+# Diseño digital sincrónico de una suma aritmética en un HDL
 
 
 ## 1. Resumen
-Este informe presenta los detalles de un porgrma digital sincróncico el cual esta programado en el lenguaje de hardware (HDL) y captura los datos de un teclado hexadecimal y lo slamacena en bibario para despues implementar una función aritmetica como la sumatoria y por ultimo desplegar el resultado en un display de 4 digitos
+Este informe presenta los detalles de un programa digital sincrónico, el cual está programado en un lenguaje de hardware (HDL), captura los datos de un teclado hexadecimal y los almacena en binario para después implementar una función aritmética como la suma, y por último, desplegar el resultado en un display de 4 dígitos.
 
 
 ## 2. Problema, objetivos y especificaciones 
 ### Problema 
-Diseñar un sistem adigital sincronica en una FPGA implementando un metodo que trabajen diferentes datos y señales con el mismo reloj, para evitar errores de sincronización, además se deben capturar dos numeros de 3 digitos cada uno de un teclado hexadecimal los cuales se van ir presentado en el display de 4 cuatros digitos a como se van digitando, para despues implementar la funcion de suma aritmetica y que se sumen estos dos valores y que se presente el resultado en el 7 segmentos. Asi mimso de debe generar un testbench básico para corroborar que funciona.
+Diseñar un sistema digital sincrónico en una FPGA, implementando un método que procese diferentes datos y señales con el mismo reloj, para evitar errores de sincronización. Además, se deben capturar dos números de 3 dígitos cada uno a partir de un teclado hexadecimal, los cuales se presentarán en el display de 4 dígitos a medida que se vayan digitando. Luego, se implementará la función de suma aritmética para que estos dos valores se sumen y el resultado se presente en el display de 7 segmentos. Asimismo, se debe generar un testbench básico para corroborar que todo el sistema funcione correctamente.
 
 ### Objetivos
 - Elaborar una correcta implementación de un diseño digital sincrónico en una FPGA.
-- Diseñar diferentes algoritmos en un HDL para la captura de datos de un teclado hexadecimal mecánico, sincronización de datos asincrónicos y despliegue de datos en dispositivos de 7-segmentos.
+- Diseñar diferentes algoritmos en un HDL para la captura de datos de un teclado hexadecimal mecánico, sincronización de datos asincrónicos y despliegue de datos en dispositivos de 7 segmentos.
 - Implementar una función de suma aritmética en un HDL.
-- Construir un testbench básico para cada módulo, para la verificación de su correcto funcionamiento.
+- Construir un testbench básico para cada módulo, con el fin de verificar su correcto funcionamiento.
 
 ### Especificaciones 
- - Subsistema lectura de teclado hexadecimal con captura de datos, eliminacion de rebote y sincronización de los datos apartir de un teclado mecanico.
- - Subsistema de suma aritmética de los dos datos.
- - Subsistema de despliegue de los números ingresados y del resultado de la suma en cuatro dispositivos
- de 7 segmentos.
- - El circuito deberá funcionar a una frecuencia de reloj de 27 MHz.
+- Subsistema de lectura del teclado hexadecimal con captura de datos, eliminación de rebote y sincronización de los datos a partir de un teclado mecánico.
+- Subsistema de suma aritmética de los dos datos.
+- Subsistema de despliegue de los números ingresados y del resultado de la suma en cuatro dispositivos de 7 segmentos.
+- El circuito deberá funcionar a una frecuencia de reloj de 27 MHz.
 
 ## 4. Diseño
 
