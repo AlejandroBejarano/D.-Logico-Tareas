@@ -26,7 +26,7 @@ Para realizar pedido se realizó, una partición de este mismo, en 4 subsistemas
 
 Para la creación del módulo capturador de teclas se diseñó el siguiente diagrama:
 
-![Diagrama_general](Fotos/Capturador de teclas diagrama.png)
+![Capturador_de_teclas_diagrama](Fotos/Capturador de teclas diagrama.png)
 
 De esto se tiene que, se utiliza un contador de anillo para activar las filas secuencialmente con un clk, seguidamente se implementa una FSM para detectar columnas activas, y por último se desarrolla un antirrebote de la señal detectada de la columna encendida.
 
