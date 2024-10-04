@@ -30,6 +30,13 @@ module mi_modulo(
 - `entrada_i`: descripción de la entrada
 - `salida_o`: descripción de la salida
 
+##### Testbench
+
+
+##### Consumo de recursos
+
+
+
 
 #### Almacenamiento de datos
 
@@ -42,6 +49,12 @@ module mi_modulo(
 ```
 - `entrada_i`: descripción de la entrada
 - `salida_o`: descripción de la salida
+
+##### Testbench
+
+
+##### Consumo de recursos
+
 
 
 
@@ -58,6 +71,12 @@ module mi_modulo(
 - `entrada_i`: descripción de la entrada
 - `salida_o`: descripción de la salida
 
+##### Testbench
+
+
+##### Consumo de recursos
+
+
 
 #### Sumatoria
 
@@ -71,6 +90,13 @@ module mi_modulo(
 
 - `entrada_i`: descripción de la entrada
 - `salida_o`: descripción de la salida
+
+##### Testbench
+
+
+##### Consumo de recursos
+
+
 
 
 ## 5. Conclusiones
