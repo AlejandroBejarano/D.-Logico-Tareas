@@ -18,7 +18,7 @@
 
 ## 4. Diseño
 
-Para realizar pedido se realizó, una partición de este mismo, en 4 subsistemas, esto se puede observar en la siguiente imagen.
+Para realizar lo pedido, se realizó una partición de este mismo sistema a desarrollar, en 4 subsistemas, esto se puede observar en la siguiente imagen.
 
 ![](Fotos/b.png)
 
