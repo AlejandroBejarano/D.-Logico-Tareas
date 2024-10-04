@@ -476,7 +476,9 @@ En el anexo 8.4, se puede observar los casos que se le ingresaron para poder obs
 ![M](Fotos/M.png)
 
 En las dos suiguientes imagenes se muestra el consumo de recursos por parte de la FPGA y el consumo de potencia que reportan las herramientas gnerados por el make synth y make pnr
-![N](Fotos/M.png)
+
+![N](Fotos/N.png)
+
 ![O](Fotos/O.png)
 
 Como se puede observar en la imagen para el make pnr la utilizacion de recursos es baja, donde la mayoria de los recursos son slices, LUTs, IOBs ya que el modulo no tiene una gran complejidad, sin embrago esuna ventja ya que le queda una gran cantidad de recursos disponibles.
@@ -1167,7 +1169,7 @@ endmodule
 ```
 En este testbench primero se declaran las variables que se van  autilizar, despues se hace la instancia del modulo, se asigna los valores para el reloj, si inicialisa con el rst y se establacen algunos numeros para probar el funcionamiento del modulo el cual carga el primer numero lo presenta en el display y despues carga el segundo numero y vuelve a su estado inicial.
 
-### 8.7 Maquina de control
+### 8.7 Testbench maquina de control
 ```SystemVerilog
 `timescale 1ns/1ps
 
