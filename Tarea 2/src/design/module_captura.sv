@@ -1,5 +1,17 @@
 
 
+
+//eliminar suma y igual capturardor, teclas_pre 1,2,3
+//aumentar vector de numeros en almacenamiento [15:0], asignar ubicacion a numeros
+// Nuevo modulo union de 3 numeros en 1
+//display logica de tarea 1, a FSM, con clk a 27, con transistores por turno con el clock
+//
+
+//ideas
+//capturador saca 3 numeros de 4 bits
+//nuevo modulo 
+
+
 module general (
     input logic clk,
     input logic rst
@@ -84,7 +96,7 @@ module cont_anillo(
 logic [3:0]fila_encendida;
 
 //Contador de anillo
-    always_ff @(posedge clk or posedge rst)begin
+    always_ff @(posedge clk)begin
 
         //Enciende la primera fila, para dar corriente.
         if (rst)begin
@@ -227,12 +239,13 @@ module detector_columna (
         end
     end
     
+
     //asigna la salida
     assign tecla_pre = salida;
     //se activa la suma
     assign suma= (tecla_pre == 4'b0011);
     //se activa el igual
-    assign igual = (tecla_pre == 4'b0111);
+    assign igual = (tecla_pre == 4'b0111); 
 
 endmodule
 
