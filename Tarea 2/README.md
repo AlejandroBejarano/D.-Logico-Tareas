@@ -2,15 +2,12 @@
 
 
 ## 1. Resumen
-<<<<<<< HEAD
 Este informe presenta los detalles de un programa digital sincrónico, el cual está programado en un lenguaje de hardware (HDL), captura los datos de un teclado hexadecimal y los almacena en binario para después implementar una función aritmética como la suma, y por último, desplegar el resultado en un display de 4 dígitos.
 
 
 ## 2. Problema, objetivos y especificaciones 
 ### Problema 
 Diseñar un sistema digital sincrónico en una FPGA, implementando un método que procese diferentes datos y señales con el mismo reloj, para evitar errores de sincronización. Además, se deben capturar dos números de 3 dígitos cada uno a partir de un teclado hexadecimal, los cuales se presentarán en el display de 4 dígitos a medida que se vayan digitando. Luego, se implementará la función de suma aritmética para que estos dos valores se sumen y el resultado se presente en el display de 7 segmentos. Asimismo, se debe generar un testbench básico para corroborar que todo el sistema funcione correctamente.
-=======
-
 
 ## 2. Introducción
 
@@ -18,22 +15,17 @@ Diseñar un sistema digital sincrónico en una FPGA, implementando un método qu
 
 
 ## 3. Objetivos
->>>>>>> parent of ea138fc (Update README.md)
-
 - Elaborar una correcta implementación de un diseño digital sincrónico en una FPGA.
 - Diseñar diferentes algoritmos en un HDL para la captura de datos de un teclado hexadecimal mecánico, sincronización de datos asincrónicos y despliegue de datos en dispositivos de 7 segmentos.
 - Implementar una función de suma aritmética en un HDL.
 - Construir un testbench básico para cada módulo, con el fin de verificar su correcto funcionamiento.
 
-<<<<<<< HEAD
 ### Especificaciones 
 - Subsistema de lectura del teclado hexadecimal con captura de datos, eliminación de rebote y sincronización de los datos a partir de un teclado mecánico.
 - Subsistema de suma aritmética de los dos datos.
 - Subsistema de despliegue de los números ingresados y del resultado de la suma en cuatro dispositivos de 7 segmentos.
 - El circuito deberá funcionar a una frecuencia de reloj de 27 MHz.
 
-=======
->>>>>>> parent of ea138fc (Update README.md)
 ## 4. Diseño
 
 Para realizar lo pedido, se realizó una partición de este mismo sistema a desarrollar, en 4 subsistemas, esto se puede observar en la siguiente imagen.
