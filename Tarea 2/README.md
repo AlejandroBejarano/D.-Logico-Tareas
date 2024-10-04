@@ -471,7 +471,7 @@ Acontinuación, se va a expliacar el funcionamiento del modulo.
         end
     end
 ```
-En el anexo 8.4, se puede observar los casos que se le ingresaron para poder observar el funcionamiento del `module_almacenamiento`, el cual se le dio un ejemplo de algunas teclas que podian ser ingresadas y se muestra como se va guardando en el orde que corresponde, así se puede ver en la imagen del GTKwave.
+En el anexo 8.5, se puede observar los casos que se le ingresaron para poder observar el funcionamiento del `module_almacenamiento`, el cual se le dio un ejemplo de algunas teclas que podian ser ingresadas y se muestra como se va guardando en el orde que corresponde, así se puede ver en la imagen del GTKwave.
 
 ![M](Fotos/M.png)
 
@@ -490,21 +490,45 @@ Al estar trabajando con bajo consumo de recursos de puede decir que el modulo es
 
 
 #### Display
+En el modulo del display se van a definir las siguientes variables de entradas y salidas basandose en este codigo []:
 
+##### Entradas
+- `input logic clk`: Señal del clock a 27 MHz.
+- `input logic rst`: Señal del reset para iniciar.
+- `input logic a`: Entrada para seleccionar cargar numero1
+- `input logic b`: Entrada para seleccionar cargar numero2
+- `input logic [11:0] numero1`: El numero 1 de 3 digitos en formato hexadecimal
+- `input logic [11:0] numero2`: El numero 2 de 3 digitos en formato hexadecimal
 
-- `entrada_i`: descripción de la entrada
-- `salida_o`: descripción de la salida
+##### Salidas
+- `output logic [3:0] an`: Control para los ánodos de los displays
+- `output logic [6:0] seg`: Controla que segmentos del display se enciende
+
+##### Declaración de constantes
+- `localparam N = 18`: Se usa para dimensionar el contador que gobierna el refresco de los displays segun la fromula que se utilizo en este codigo [].
+
+#####  Declaraciones de señales internas
+- `logic [N-1:0] q_reg`: Guarda el valor actual del contador
+- `logic [N-1:0] q_next`: Es el valor siguiente (q_reg + 1).
+- `logic [3:0] numero1_in`: Señal para almacenar el numero 1.
+- ` logic [3:0] numero2_in`:Señal para almacenar el numero 2.
+- `logic [3:0] numero_actual_in`: Para saber cual de los dos numeros se va a almacenar.
+- `logic state`: Estado de la máquina que selecciona entre `numero1` y `numero2`.
+
+##### Definicion de estado
+- `localparam cargar_numero1 = 1'b0`: Estado en el que se carga y muestra `numero1``.
+- ` localparam cargar_numero2 = 1'b1`: Estado en el que se carga y muestra `numero`.
 
 ```SystemVerilog
 module module_display(
    input logic rst,
    input logic clk,
-   input logic a,   // Entrada para seleccionar cargar numero1
-   input logic b,   // Entrada para seleccionar cargar numero2
+   input logic a,   
+   input logic b,   
    input logic [11:0] numero1,  
    input logic [11:0] numero2,  
-   output logic [3:0] an,       // Control para los ánodos de los displays
-   output logic [6:0] seg       // Segmentos del display
+   output logic [3:0] an,       
+   output logic [6:0] seg       
 );
 
     // Declaración de constantes
@@ -521,6 +545,12 @@ module module_display(
     // Definición de estados
     localparam cargar_numero1 = 1'b0;
     localparam cargar_numero2 = 1'b1;
+```
+Acontinuacion se va a explicar el funcionamiento del modulo del display para 4 digitos:
+- Primero esta el contador de refreco que va ir cambiando entre los digitos del los numeros del display. Donde el `q-reg` se incremeta con cada falco positivo del reloj `clk` y se reinicia a 0 si se activa el `rst`, para alternar ente los digitos.
+- en la `always_comb` se controla cual numero fue selecionado si `numero1` o `numero2` y cual digito en especifico se debe mostar.
+- Por ultimo en la seccion `always_comb` se decodifica el valor de `numero_actual_in` para mostralo en el display de 7 segmentos.
+```SystemVerilog
 
     // Contador de refresco para cambiar entre dígitos de los números
     always_ff @(posedge clk or posedge rst) begin 
@@ -534,52 +564,48 @@ module module_display(
 
     // Asignar valores por defecto para evitar latches
     always_comb begin
-        // Valores por defecto para evitar inferencia de latches
-        state = cargar_numero1;  // Por defecto, estado = cargar_numero1
-        an = 4'b1111;            // Desactivar todos los displays por defecto
-        numero_actual_in = 4'b0000;  // Valor por defecto
+        state = cargar_numero1;  
+        an = 4'b1111;           
+        numero_actual_in = 4'b0000;  
 
-        // Asignación de estado
         if (a) begin
-            state = cargar_numero1;  // Si `a` está activado, selecciona numero1
+            state = cargar_numero1;  
         end else if (b) begin
-            state = cargar_numero2;  // Si `b` está activado, selecciona numero2
+            state = cargar_numero2;  
         end
 
-        // Selección de dígito del número correspondiente
         case (q_reg[N-1:N-2])
             2'b00: begin 
                 an = 4'b1110;  // Habilita el primer display
                 if (state == cargar_numero1)
-                    numero_actual_in = numero1[3:0];  // Parte baja de numero1
+                    numero_actual_in = numero1[3:0];  
                 else
-                    numero_actual_in = numero2[3:0];  // Parte baja de numero2
+                    numero_actual_in = numero2[3:0];  
             end 
             2'b01: begin
                 an = 4'b1101;  // Habilita el segundo display
                 if (state == cargar_numero1)
-                    numero_actual_in = numero1[7:4];  // Parte media de numero1
+                    numero_actual_in = numero1[7:4];  
                 else
-                    numero_actual_in = numero2[7:4];  // Parte media de numero2
+                    numero_actual_in = numero2[7:4]; 
             end 
             2'b10: begin 
                 an = 4'b1011;  // Habilita el tercer display
                 if (state == cargar_numero1)
-                    numero_actual_in = numero1[11:8];  // Parte alta de numero1
+                    numero_actual_in = numero1[11:8];  
                 else
-                    numero_actual_in = numero2[11:8];  // Parte alta de numero2
+                    numero_actual_in = numero2[11:8];  
             end 
             default: begin 
-                an = 4'b1111;  // Desactiva todos los displays por defecto
-                numero_actual_in = 4'b0000;  // Valor por defecto
+                an = 4'b1111;  
+                numero_actual_in = 4'b0000;  
             end 
         endcase      
     end 
 
     // Lógica para decodificar el número en segmentos de 7 segmentos
     always_comb begin
-        // Asignar valor por defecto para evitar latch en 'seg'
-        seg = 7'b1111111;  // Apagado por defecto
+        seg = 7'b1111111; 
 
         case (numero_actual_in)
             4'h0: seg = 7'b1000000; // Muestra 0
@@ -599,14 +625,16 @@ module module_display(
 endmodule
 
 ```
+En el anexo 8.6, se puede observar los casos que se le ingresaron para poder ver el funcionamiento del `module_display`, el cual se le dio un ejemplo de dos numeros que fueron ingresados para poder corroborar que efectivamente presentaba los numeros en el display de 7 segmentos, así se puede ver en la imagen del GTKwave.
 
+Ademas de su funcionamiento con el comando make wv, también se puede implementar el make synth y make pnr para poder hacer su analisis de cuanto consumo de recursos genera este modulo y como se puede apresiar el la siguiente imagen:
+En el caso del make synth se puede observa una implamentacion significativa de recurso ya que utilizan bastantes cables al igual de la cantidad de conexiones que esta realizando al exterior, tiene un numero elevado de uso de las celdas y incluye componnetes como ALUs, flip-flops, buffers de entrada y salida y LUTs, dejando claro que esta module es mucho más complejo dado que tiene que hacer multiples operacioneslogicas. 
 
+Un caso siminlar pasa a la hora de analaisar el make pnr ya que estos dos van de la mano y se muestra que recursos como VCC, GND y GSR esta siendo utilizados el 100%, siembargo existen otros como Slice, IOB y algunas LUTs que muestran una baja utilizacion dando la opornutidad para agregarle ateras adicionales o buscar obtimizaciones.
 
-##### Testbench
+![P](Fotos/P.png)
 
-
-##### Consumo de recursos
-
+![Q](Fotos/Q.png)
 
 
 #### Sumatoria
@@ -630,26 +658,107 @@ module mi_modulo(
 ##### Consumo de recursos
 
 
-#### Control
+#### Control (maquina de estado)
+En este modulo como se esta trabajando con una maquina de estado acontinuacion se va a presentar el diagrama con el cual se esta implementando la logica del programa:
 
+![R](Fotos/R.png)
 
-- `entrada_i`: descripción de la entrada
-- `salida_o`: descripción de la salida
+##### Entradas
+- `input logic clk`: Señal del clock a 27 MHz.
+- `input logic rst`: Señal del reset para iniciar.
+- `input logic a`: Tecla para sumar
+- `input logic b`: Tecla para igualar los datos
+- `input logic c`: Tecla para eliminar datso
+- `input logic [3:0] tecla_pre`: La lectura de las teclas de modulo de captura de teclas
+##### Salidas
+- `output logic cargar_numero1`: Señal que indica cuándo cargar el primer número.
+- `output logic cargar_numero2`: Señal que indica cuándo cargar el segundo número.
+- `output logic rst_datos`: Señal para eliminar datos
+- `output logic igual`: descripción de la salida
+
 
 ```SystemVerilog
-module mi_modulo(
-    input logic     entrada_i,      
-    output logic    salida_i 
-    );
+
+module maquina_estado (
+    input logic clk,
+    input logic rst,
+    input logic a,  
+    input logic b,   
+    input logic c,   
+    input logic [3:0] tecla_pre,
+    output logic cargar_numero1,  
+    output logic cargar_numero2,  
+    output logic rst_datos,     
+    output logic igual,           
+    output logic clk_out
+);
+```
+Continuando con la idea que se presento en el diagrama para la maquina de estado la logica es la siguiente:
+- Se tienen 3 estado posibles definidos por `typedef enum`, los cuales son S0, S1, S2.
+- La FSM lmacena su estado actual en el regitros `state` y se actualiza cada ciclo de reloj o se reinicia cuando `rst` esta activada y vualve al estado inicial S0 o sino cambi al `nexstate`.
+Con el `always_com` se hace la logica del cambio de estado de acuedo con las entradas a, b, c y el estado actual, entonces de acuerdo a la entrada se decide cual va a ser el proximo `nexstate` y cuales señales deben activarse.Para guiarse se tomo como ejemolo un ejercico del libro[].
+```SystemVerilog
+    // Definición de estados
+    typedef enum logic [1:0] {S0, S1, S2} statetype;
+    statetype state, nextstate;
+
+    // Registro de estado
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            state <= S0;
+        end else begin
+            state <= nextstate;
+        end
+    end
+
+    // Lógica de cambio de estado
+    always_comb begin
+        nextstate = state; 
+        cargar_numero1 = 0;
+        cargar_numero2 = 0;
+        reset_datos = 0;
+        igual = 0;
+
+        case (state)
+            S0: begin
+                if (a) begin
+                    cargar_numero1 = 1; 
+                    nextstate = S1;
+                end else if (c) begin
+                    reset_datos = 1; 
+                end
+            end
+            S1: begin
+                if (a) begin
+                    cargar_numero2 = 1; 
+                    nextstate = S2;
+                end else if (c) begin
+                    reset_datos = 1; 
+                    nextstate = S0;
+                end
+            end
+            S2: begin
+                igual = 1; // Señal de igual cuando se llega al estado S2
+                if (c) begin
+                    reset_datos = 1; // Reiniciar datos cuando se presiona 'c'
+                    nextstate = S0;
+                end
+            end
+        endcase
+    end
+
+endmodule
 ```
 
+En el anexo 8.7, se puede observar los casos que se le ingresaron para poder ver el funcionamiento del `module_maquina_estado`, donde se probo cada tecla para ver si cumplia su funcionaminto al pasar al siguiente estado segmentos, así se puede ver en la imagen del GTKwave.
 
+![S](Fotos/S.png)
 
-##### Testbench
+Además tambien se provaron el make synth y el make pnr que adecuerdo a los datos sintetizados se puede decir que la maquina de estado es un programa simple ya que no consume gran cantidad de recursos, algunas de ellos son  DFFs, buffers de entradas y salidas y varias LUTs en el caso de make synth y con el make pnr utiliza VCC, GDN y GSR llegando a utilizarlos al 100% sin ambargo existen otros que tienen una baja implementacion como SLICE, IOB y varios LUTs o otros que nos los utiliza del todo como ODDR, RAMW y OSC.
 
+![T](Fotos/T.png)
 
-##### Consumo de recursos
-
+![U](Fotos/U.png)
 
 
 
@@ -1167,7 +1276,7 @@ module module_display_tb;
 
 endmodule
 ```
-En este testbench primero se declaran las variables que se van  autilizar, despues se hace la instancia del modulo, se asigna los valores para el reloj, si inicialisa con el rst y se establacen algunos numeros para probar el funcionamiento del modulo el cual carga el primer numero lo presenta en el display y despues carga el segundo numero y vuelve a su estado inicial.
+En este testbench primero se declaran las variables que se van  autilizar, despues se hace la instancia del modulo, se asigna los valores para el reloj, si inicialisa con el rst y se establacen algunos numeros para probar el funcionamiento del modulo el cual carga el primer numero lo presenta en el display, para ir mostrandolo conforme se digita en el display y despues carga el segundo numero volve hacer la logica y vuelve a su estado inicial.
 
 ### 8.7 Testbench maquina de control
 ```SystemVerilog
