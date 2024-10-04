@@ -391,22 +391,98 @@ Además se observa la utilización de una fuente de alimentación VCC, 145  SLIC
 
 
 #### Almacenamiento de datos
-
-- `entrada_i`: descripción de la entrada
-- `salida_o`: descripción de la salida
+Para el modulo de alamacenamientos de datos primero se definieron las siguientes variables:
+##### Entradas 
+- `input logic clk`: Señal del clock a 27 MHz
+- `input logic rst`: Señal del reset para iniciar y vaciar los vectores de almacenamiento de datos
+- `input logic [3:0] tecla_pre`: La señal mencionada nateriormente de la tecla que fue selecionada
+- `input logic cargar_numero1`: Señal de control que indica cuándo cargar un número en  `numero1`.
+- `input logic cargar_numero1`: Señal de control que indica cuándo cargar un número en `numero2`.
+- `input logic reset_datos`: Señal de control interna que reinicia los valores de `numero1` y `numero2`, y los índices internos de los números.
+##### Salidas
+- `output logic [11:0] numero1`: Registro de 12 bits que almacena el primer número capturado.
+- `output logic [11:0] numero2`: Registro de 12 bits que almacena el segundo número capturado.
+##### Señales internas 
+`logic [1:0] indice_numero1` y `output logic [11:0] numero2`: Variables internas de 2 bits que actúan como índices para saber en qué parte del número (de 12 bits) se debe almacenar el próximo dígito ingresado.
 
 ```SystemVerilog
-module mi_modulo(
-    input logic     entrada_i,      
-    output logic    salida_i 
-    );
+module almacenamiento_datos (
+    input logic clk,
+    input logic rst,
+    input logic [3:0] tecla_pre,   
+    input logic cargar_numero1,    
+    input logic cargar_numero1,    
+    input logic reset_datos,       
+    output logic [11:0] numero1,  
+    output logic [11:0] numero2
+);
+    logic [1:0] indice_numero1; 
+    logic [1:0] indice_numero2; 
 ```
+Acontinuación, se va a expliacar el funcionamiento del modulo. 
+- Se inicia con el con el rst ya que se asegura que tanto el `numero1`, `numero2`, `indice_numero1` e `indice_numero2`empiecen en 0. 
+- Se implementa la señal interna de `reset_datos` la cual al activarse vualve a reiniciar el sistema dejando a los numeros y los indices en ceros.
+- En el caso de activarse el `cargar_numero1` el modulo lee la señal `tecla_pre` y deacuerdo a la posicion del `indice_numero1` almacena el dato en la posicion `numero1` despues se incrememta en una posicion y cuando llega al limite se devuelve a 0.
+- En el caso de activarse el `cargar_numero1` sucese la misma logica solo que se trabaja con el `numero2` y el `indice_numero`
 
+```SystemVerilog
+  always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            // Inicializa los valores
+            indice_numero1 <= 0;
+            indice_numero2 <= 0;
+            numero1 <= 12'b0;
+            numero2 <= 12'b0;
+        end else begin
+            if (reset_datos) begin
+                numero1 <= 12'b0;
+                numero2 <= 12'b0;
+                indice_numero1 <= 0;
+                indice_numero2 <= 0;
+            end else begin
+                if (cargar_numero1) begin
+                    case (indice_numero1)
+                        2'b00: numero1[3:0]   <= tecla_pre;
+                        2'b01: numero1[7:4]   <= tecla_pre;
+                        2'b10: numero1[11:8]  <= tecla_pre;
+                        default: ; 
+                    endcase
 
-##### Testbench
+                    if (indice_numero1 < 2'b10) begin
+                        indice_numero1 <= indice_numero1 + 1;
+                    end else begin
+                        indice_numero1 <= 0; // Reinicia si se supera el límite
+                    end
+                end else if (cargar_numero2) begin
+                    case (indice_numero2)
+                        2'b00: numero2[3:0]   <= tecla_pre;
+                        2'b01: numero2[7:4]   <= tecla_pre;
+                        2'b10: numero2[11:8]  <= tecla_pre;
+                        default: ; // Agregar un caso por defecto para manejar índices no válidos
+                    endcase
+                    // Incrementar índice y reiniciar si es necesario
+                    if (indice_numero2 < 2'b10) begin
+                        indice_numero2 <= indice_numero2 + 1;
+                    end else begin
+                        indice_numero2 <= 0; // Reinicia si se supera el límite
+                    end
+                end 
+            end
+        end
+    end
+```
+En el anexo 8.4, se puede observar los casos que se le ingresaron para poder observar el funcionamiento del `module_almacenamiento`, el cual se le dio un ejemplo de algunas teclas que podian ser ingresadas y se muestra como se va guardando en el orde que corresponde, así se puede ver en la imagen del GTKwave.
 
+![M](Fotos/M.png)
 
-##### Consumo de recursos
+En las dos suiguientes imagenes se muestra el consumo de recursos por parte de la FPGA y el consumo de potencia que reportan las herramientas gnerados por el make synth y make pnr
+![N](Fotos/M.png)
+![O](Fotos/O.png)
+
+Como se puede observar en la imagen para el make pnr la utilizacion de recursos es baja, donde la mayoria de los recursos son slices, LUTs, IOBs ya que el modulo no tiene una gran complejidad, sin embrago esuna ventja ya que le queda una gran cantidad de recursos disponibles.
+Al igual que el make pnr,  el make synth es ligero ya que no cuenta con una gran complejidad, sin ambrago se puede destacar la grancantidad de datos que se estan tranportando por los cables, así como las conexiones que se tiene al exterior. Además se implemento algunos elemetos basicos como DFFCE los cuales son los registros basados en flip-flops, IBUF para manejar las señales de entrada, los Lookup Tables (LUTs) como LUT1 (3), LUT2 (5), LUT3 (5), LUT4 (6), MUX2_LUT5 (3), que pfueron implementados para las funciones buleanas en la FPGA, OBUF para manejar la señales de salida y el GNG para la señal de tierra.
+
+Al estar trabajando con bajo consumo de recursos de puede decir que el modulo es eficiente y cuanta con la capacidad de seguir desarrollandolo aún más, sin llegar a sobre cargar la FPGA.
 
 
 
@@ -418,10 +494,108 @@ module mi_modulo(
 - `salida_o`: descripción de la salida
 
 ```SystemVerilog
-module mi_modulo(
-    input logic     entrada_i,      
-    output logic    salida_i 
-    );
+module module_display(
+   input logic rst,
+   input logic clk,
+   input logic a,   // Entrada para seleccionar cargar numero1
+   input logic b,   // Entrada para seleccionar cargar numero2
+   input logic [11:0] numero1,  
+   input logic [11:0] numero2,  
+   output logic [3:0] an,       // Control para los ánodos de los displays
+   output logic [6:0] seg       // Segmentos del display
+);
+
+    // Declaración de constantes
+    localparam N = 18; 
+
+    // Declaraciones de señales internas
+    logic [N-1:0] q_reg;
+    logic [N-1:0] q_next;
+    logic [3:0] numero1_in;
+    logic [3:0] numero2_in;
+    logic [3:0] numero_actual_in;
+    logic state;  // Señal para el estado (selección entre número1 y número2)
+
+    // Definición de estados
+    localparam cargar_numero1 = 1'b0;
+    localparam cargar_numero2 = 1'b1;
+
+    // Contador de refresco para cambiar entre dígitos de los números
+    always_ff @(posedge clk or posedge rst) begin 
+        if (rst)
+            q_reg <= 0;
+        else 
+            q_reg <= q_next;
+    end 
+
+    assign q_next = q_reg + 1;
+
+    // Asignar valores por defecto para evitar latches
+    always_comb begin
+        // Valores por defecto para evitar inferencia de latches
+        state = cargar_numero1;  // Por defecto, estado = cargar_numero1
+        an = 4'b1111;            // Desactivar todos los displays por defecto
+        numero_actual_in = 4'b0000;  // Valor por defecto
+
+        // Asignación de estado
+        if (a) begin
+            state = cargar_numero1;  // Si `a` está activado, selecciona numero1
+        end else if (b) begin
+            state = cargar_numero2;  // Si `b` está activado, selecciona numero2
+        end
+
+        // Selección de dígito del número correspondiente
+        case (q_reg[N-1:N-2])
+            2'b00: begin 
+                an = 4'b1110;  // Habilita el primer display
+                if (state == cargar_numero1)
+                    numero_actual_in = numero1[3:0];  // Parte baja de numero1
+                else
+                    numero_actual_in = numero2[3:0];  // Parte baja de numero2
+            end 
+            2'b01: begin
+                an = 4'b1101;  // Habilita el segundo display
+                if (state == cargar_numero1)
+                    numero_actual_in = numero1[7:4];  // Parte media de numero1
+                else
+                    numero_actual_in = numero2[7:4];  // Parte media de numero2
+            end 
+            2'b10: begin 
+                an = 4'b1011;  // Habilita el tercer display
+                if (state == cargar_numero1)
+                    numero_actual_in = numero1[11:8];  // Parte alta de numero1
+                else
+                    numero_actual_in = numero2[11:8];  // Parte alta de numero2
+            end 
+            default: begin 
+                an = 4'b1111;  // Desactiva todos los displays por defecto
+                numero_actual_in = 4'b0000;  // Valor por defecto
+            end 
+        endcase      
+    end 
+
+    // Lógica para decodificar el número en segmentos de 7 segmentos
+    always_comb begin
+        // Asignar valor por defecto para evitar latch en 'seg'
+        seg = 7'b1111111;  // Apagado por defecto
+
+        case (numero_actual_in)
+            4'h0: seg = 7'b1000000; // Muestra 0
+            4'h1: seg = 7'b1111001; // Muestra 1
+            4'h2: seg = 7'b0100100; // Muestra 2
+            4'h3: seg = 7'b0110000; // Muestra 3
+            4'h4: seg = 7'b0011001; // Muestra 4
+            4'h5: seg = 7'b0010010; // Muestra 5
+            4'h6: seg = 7'b0000010; // Muestra 6
+            4'h7: seg = 7'b1111000; // Muestra 7
+            4'h8: seg = 7'b0000000; // Muestra 8
+            4'h9: seg = 7'b0010000; // Muestra 9
+            default: seg = 7'b1111111; // Apagado
+        endcase
+    end
+
+endmodule
+
 ```
 
 
@@ -816,3 +990,257 @@ endmodule
 ```
 
 En este código primero se declaran las variables a utilizar, y seguidamente se instancia el módulo de capturador de teclas, luego se asignan valores a pulsos provocados por activaciones de columnas y tratar de generar ruido para su correcto funcionamiento.
+
+### 8.5 Testbench almacenamiento de datos
+
+```SystemVerilog
+`timescale 1ns/1ps
+
+module module_almacenamiento_tb;
+
+// Declaración de señales
+    logic clk;
+    logic rst;
+    logic [3:0] tecla_pre;
+    logic cargar_numero1;
+    logic cargar_numero2;
+    logic reset_datos;
+    logic [11:0] numero1; 
+    logic [11:0] numero2; 
+
+// Instancia del módulo a probar
+    module_almacenamiento module_almacenamiento_tb(
+        .clk(clk),
+        .rst(rst),
+        .tecla_pre(tecla_pre),
+        .cargar_numero1(cargar_numero1),
+        .cargar_numero2(cargar_numero2),
+        .reset_datos(reset_datos),
+        .numero1(numero1),
+        .numero2(numero2)
+    );
+
+    initial begin 
+        clk = 0;
+        forever #5 clk = ~clk;
+    end 
+
+    initial begin 
+        rst = 1;
+        tecla_pre = 0;
+        cargar_numero1 = 0;
+        cargar_numero2 = 0;
+        reset_datos = 0;
+
+        // Desactiva el reset
+        #15 rst = 0;
+
+        // Se cargan los nuevos datos en el numero1
+        #10 tecla_pre = 4'b0101; // 5, número 1
+        cargar_numero1 = 1;
+        #10 cargar_numero1 = 0;
+
+        #10 tecla_pre = 4'b0011; // 3, número 2
+        cargar_numero1 = 1;
+        #10 cargar_numero1 = 0;
+
+        #10 tecla_pre = 4'b0110; // 6, número 3
+        cargar_numero1 = 1;
+        #10 cargar_numero1 = 0;
+
+        // Se cargan los nuevos datos en el numero2
+        #10 tecla_pre = 4'b1001; // 9, número 1
+        cargar_numero2 = 1;
+        #10 cargar_numero2 = 0;
+
+        #10 tecla_pre = 4'b0001; // 1, número 2
+        cargar_numero2 = 1;
+        #10 cargar_numero2 = 0;
+        
+        #10 tecla_pre = 4'b1000; // 8, número 3
+        cargar_numero2 = 1;
+        #10 cargar_numero2 = 0;
+
+        #20 reset_datos = 1;
+        #10 reset_datos = 0;
+
+        #100 
+        $finish;
+    end 
+
+    initial begin 
+        $monitor("Time=%0t | numero1=%b | numero2=%b", $time, numero1, numero2);
+    end 
+
+    initial begin // Para el diagrama de tiempos
+        $dumpfile("module_almacenamiento_tb.vcd");
+        $dumpvars(0, module_almacenamiento_tb);
+    end
+
+endmodule
+
+```
+En este testbench primero se declaran las variables, despues se hace la instancia del modulo, se asigna los valores para el reloj, si inicialisa con el rst en 1 para que todo este en valores de 0, se desactiva el rst y se empiesan a cargar los digitos del numero 1 y depues los digitos del numero 2, depues de un perido de tiempo se eliminan y se reinicia el programa.
+
+
+### 8.6 Testbench display
+
+```SystemVerilog
+module module_display_tb;
+
+    // Señales de entrada
+    logic rst;
+    logic clk;
+    logic a;
+    logic b;
+    logic [11:0] numero1;
+    logic [11:0] numero2;
+
+    // Señales de salida
+    logic [3:0] an;
+    logic [6:0] seg;
+
+    // Instancia del módulo display
+    module_display uut (
+        .rst(rst),
+        .clk(clk),
+        .a(a),
+        .b(b),
+        .numero1(numero1),
+        .numero2(numero2),
+        .an(an),
+        .seg(seg)
+    );
+
+    // Generación del reloj
+    initial begin
+        clk = 0;
+        forever #10 clk = ~clk; // Periodo de 20ns
+    end
+
+    // Secuencia de prueba
+    initial begin
+        // Inicialización
+        rst = 1;
+        a = 0;
+        b = 0;
+        numero1 = 12'h000;  // Número 1 inicializado a 000
+        numero2 = 12'h000;  // Número 2 inicializado a 000
+
+        #30 rst = 0;
+
+        // Cargar el primer número en numero1 (593)
+        #20 numero1 = 12'h593;
+
+        // Selecciona número1 para mostrar
+        #20 a = 1;
+        #20 a = 0;
+
+        // Cargar el segundo número en numero2 (167)
+        #40 numero2 = 12'h167;
+
+        // Selecciona número2 para mostrar
+        #20 b = 1;
+        #20 b = 0;
+
+        // Reseteo
+        #40 rst = 1;
+        #20 rst = 0;
+
+        #100 
+        $finish;
+    end
+
+    // Monitor para observar las señales
+    initial begin
+        $monitor("Time=%0t | an=%b | seg=%b | numero1=%h | numero2=%h",
+            $time, an, seg, numero1, numero2);
+    end
+
+    // Dumpfile para simulación
+    initial begin
+        $dumpfile("module_display_tb.vcd");
+        $dumpvars(0, module_display_tb);
+    end
+
+endmodule
+```
+En este testbench primero se declaran las variables que se van  autilizar, despues se hace la instancia del modulo, se asigna los valores para el reloj, si inicialisa con el rst y se establacen algunos numeros para probar el funcionamiento del modulo el cual carga el primer numero lo presenta en el display y despues carga el segundo numero y vuelve a su estado inicial.
+
+### 8.7 Maquina de control
+```SystemVerilog
+`timescale 1ns/1ps
+
+module module_maquina_estado_tb;
+// entrada
+    logic clk;
+    logic rst;
+    logic a;
+    logic b;
+    logic c;
+    logic [3:0] tecla_pre;
+//salida
+    logic cargar_numero1;
+    logic cargar_numero2;
+    logic rst_datos;
+    logic igual;
+    logic clk_out;
+
+    maquina_estado maquina_estado_tb(
+        .clk(clk),
+        .rst(rst),
+        .a(a),
+        .b(b),
+        .c(c),
+        .tecla_pre(tecla_pre),
+        .cargar_numero1(cargar_numero1),
+        .cargar_numero2(cargar_numero2),
+        .rst_datos(rst_datos), 
+        .igual(igual),
+        .clk_out(clk_out) 
+    );
+ 
+    initial begin 
+        clk = 0;
+        forever #10 clk = ~clk;
+    end 
+    initial begin 
+        rst = 1;
+        a = 0;
+        b = 0;
+        c = 0;
+        tecla_pre = 4'b0000;
+        
+        #30 rst = 0;
+
+        //Prueba de teclas
+
+        //tecla "a" para cargar el numero1
+        #20 a = 1;
+        #20 a = 0; 
+        //tecla "a" para cargar el numero2
+        #40 a = 1;
+        #20 a = 0; 
+        //tecla "b" (igualar)
+        #40 b = 1;
+        #20 b = 0;       
+        //tecla "c" para resetear los datos
+        #40 c = 1;
+        #20 c = 0;
+
+        #100 
+        $finish;
+    end 
+    initial begin
+        $monitor("Time=%0t | a=%b b=%b c=%b | cargar_numero1=%b cargar_numero2=%b igual=%b rstt_datos=%b",
+            $time, a, b, c, cargar_numero1, cargar_numero2, igual, rst_datos);
+    end
+    initial begin 
+        $dumpfile("module_maquina_estado_tb.vcd");
+        $dumpvars(0,module_maquina_estado_tb);
+    end
+
+endmodule
+```
+
+Al igualque en los testbenh anteriores primero declaran las variables que se van  autilizar, despues se hace la instancia del modulo, se asigna los valores para el reloj, si inicialisa con el rst y se pueban algunas teclas para ver el correcto funcionaminedo de la maquina de estado.
