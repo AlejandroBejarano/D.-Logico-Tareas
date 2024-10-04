@@ -18,7 +18,9 @@
 
 ## 4. Diseño
 
-Para realizar pedido se realizó, una partición de este mismo, en 4 subsistemas
+Para realizar pedido se realizó, una partición de este mismo, en 4 subsistemas, esto se puede observar en la siguiente imagen.
+
+![](Fotos/b.png)
 
 ### 4.1 Descripción general de cada subsistema
 
@@ -26,7 +28,7 @@ Para realizar pedido se realizó, una partición de este mismo, en 4 subsistemas
 
 Para la creación del módulo capturador de teclas se diseñó el siguiente diagrama:
 
-![Capturador de teclas diagrama](Fotos/Capturador de teclas diagrama.png)
+![a](Fotos/a.png)
 
 De esto se tiene que, se utiliza un contador de anillo para activar las filas secuencialmente con un clk, seguidamente se implementa una FSM para detectar columnas activas, y por último se desarrolla un antirrebote de la señal detectada de la columna encendida.
 
@@ -59,7 +61,7 @@ endmodule
 
 En la siguiente imagen se observa el comportamiento de la activación de las filas.
 
-![Sal_cont_anillo](Fotos/contador anillo.png)
+![c](Fotos/c.png)
 
 
 El segundo módulo que tratar es el detector de columna, en él se tienen las siguientes entradas y salidas:
@@ -75,7 +77,7 @@ El segundo módulo que tratar es el detector de columna, en él se tienen las si
 
 Para construir el módulo se desarrolló una FSM, para detectar si se presiona alguna configuración especifica de fila y columna, para ello se tiene un estado para cada fila, y además otros 16 estados más, que corresponden a cada una de las teclas presentes en el teclado 4x4.
 
-![FSM_Detector_de_columnas](Fotos/FSM detector.jpg)
+![d](Fotos/d.jpg)
 
 Del diagrama anterior se desarrolló el siguiente código:
 
@@ -212,9 +214,9 @@ Continuando con el código de detector de columna por medio de lógica secuencia
 
 Del Anexo 8.1, donde se observa el código del testbench para el módulo de detector de columna, donde por medio de la herramienta de GTKwave y la consola, se observa como la salida tecla_pre toma los valores de las teclas presionadas.
 
-![Testbench_de_columna](Fotos/modulo detector de columnas.png)
+![e](Fotos/e.png)
 
-![Salida_consola_dect_col](Fotos/salida de consola detector de col.png)
+![f](Fotos/f.png)
 
 
 
@@ -249,7 +251,7 @@ En el código, se observa que tiene una entrada, que corresponde a el clock de 2
 
 Del Anexo 8.2, se tiene el testbench del divisor de frecuencia, donde se observa en la siguiente imagen el funcionamiento del módulo.
 
-![salida_divisor_tb](Fotos/modulo divisor de frecuencia.png)
+![g](Fotos/g.png)
 
 
 
@@ -293,7 +295,8 @@ endmodule
 
 En el Anexo 8.3 se puede observar el testbench del modulo del rebote mecánico, donde se puede observar su funcionamiento en la siguiente imagen.
 
-![rebote_tb](Fotos/modulo rebote.png)
+![h](Fotos/h.png)
+
 
 
 
