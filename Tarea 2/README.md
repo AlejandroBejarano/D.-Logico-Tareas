@@ -694,15 +694,6 @@ El testbench se utiliza para verificar la funcionalidad del módulo SumaAri medi
 
 
 
-
-
-
-##### Testbench
-
-
-##### Consumo de recursos
-
-
 #### Control (maquina de estado)
 En este modulo como se esta trabajando con una maquina de estado acontinuacion se va a presentar el diagrama con el cual se esta implementando la logica del programa:
 
