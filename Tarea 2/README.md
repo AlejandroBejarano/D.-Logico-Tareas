@@ -639,16 +639,61 @@ Un caso siminlar pasa a la hora de analaisar el make pnr ya que estos dos van de
 
 #### Sumatoria
 
+El módulo SumaAri está diseñado para realizar la suma aritmética de dos números binarios de 12 bits cada uno, que representan valores decimales de hasta 3 dígitos (máximo 999). La salida de la suma es un valor de 14 bits que puede representar hasta 4 dígitos decimales (máximo 1998).
 
-- `entrada_i`: descripción de la entrada
-- `salida_o`: descripción de la salida
+El módulo SumaAri contiene las siguientes señales:
+
+- `clk`: Señal de reloj utilizada para la sincronización del proceso de suma.
+- `rst_n`: Señal de reset activa baja, que inicializa la salida a cero.
+- `num1 y num2`: Entradas de 12 bits que representan los dos números a sumar.
+- `sum`: Salida de 14 bits que contiene el resultado de la suma de num1 y num2.
+
+El módulo opera bajo un proceso secuencial, activado por el flanco de subida de la señal de reloj (clk) o el flanco de bajada del reset (rst_n). Cuando la señal rst_n está activa (en 0), la salida sum se inicializa a 0. Cuando rst_n está en 1, el módulo realiza la operación de suma entre num1 y num2, almacenando el resultado en la señal sum.
+
+El bloque always_ff asegura que la suma se realiza de manera síncrona con la señal de reloj, permitiendo que la operación se realice de manera controlada en cada ciclo de reloj.
+
+
 
 ```SystemVerilog
-module mi_modulo(
-    input logic     entrada_i,      
-    output logic    salida_i 
-    );
+module SumaAri (
+    input logic clk,           // Señal de reloj
+    input logic rst_n,         // Señal de reset activa baja
+    input logic [11:0] num1,   // Primer número de entrada (3 dígitos decimales)
+    input logic [11:0] num2,   // Segundo número de entrada (3 dígitos decimales)
+    output logic [13:0] sum    // Resultado de la suma (máximo 4 dígitos decimales)
+);
+
+    always_ff @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            sum <= 14'd0; // Resetear el resultado de la suma
+        end else begin
+            sum <= num1 + num2; // Realizar la suma aritmética
+        end
+    end
+endmodule
 ```
+
+En el Anexo 8.8 se puede observar el testbench del módulo de SumaAri.
+
+La señal de reloj (clk) se genera mediante un proceso initial, con un período de 10 ns. Esto se logra con una instrucción forever, que alterna el valor de clk cada 5 ns para obtener un ciclo de 10 ns.
+
+En el testbench se definen diferentes etapas de la simulación:
+
+Estimulación:
+
+Se realizan dos pruebas de suma:
+1. Primero, num1 se asigna a 123 (12'b1111011) y num2 a 456 (12'b111001000).
+2. Luego, num1 se asigna a 789 (12'b1100010101) y num2 a 321 (12'b101000001).
+
+
+Monitorización y generación de Archivo de señales:
+El testbench utiliza $monitor para imprimir los valores de num1, num2, y sum en cada cambio de señal. Además, se generan archivos de volcado (vcd) para analizar las señales con un visualizador de formas de onda.
+
+Resultados de simulación: 
+El testbench se utiliza para verificar la funcionalidad del módulo SumaAri mediante la observación de los resultados de la suma de diferentes pares de números (num1 y num2). La simulación demuestra que el módulo realiza la suma correctamente, y los resultados se pueden visualizar en el archivo de forma de onda generado (SumaAri.vcd).
+
+
+
 
 
 
@@ -1355,3 +1400,55 @@ endmodule
 ```
 
 Al igualque en los testbenh anteriores primero declaran las variables que se van  autilizar, despues se hace la instancia del modulo, se asigna los valores para el reloj, si inicialisa con el rst y se pueban algunas teclas para ver el correcto funcionaminedo de la maquina de estado.
+
+### 8.8 Testbench SumaAri
+
+``` SystemVerilog
+module SumaAri_tb;
+    // Señales de prueba
+    logic clk;
+    logic rst_n;
+    logic [11:0] num1;
+    logic [11:0] num2;
+    logic [13:0] sum;
+    // Instancia del módulo SumaAri
+    SumaAri uut (
+        .clk(clk),
+        .rst_n(rst_n),
+        .num1(num1),
+        .num2(num2),
+        .sum(sum)
+    );
+    // Generación de reloj
+    initial begin
+        clk = 0;
+        forever #5 clk = ~clk; // Periodo de 10ns
+    end
+    initial begin
+        // Inicializar señales
+        rst_n = 0;
+        num1 = 12'b000000000000; // Valor binario
+        num2 = 12'b000000000000; // Valor binario
+
+        // Reset del sistema
+        #10 rst_n = 1;
+
+        // Prueba de suma simple
+        #10 num1 = 12'b1111011; num2 = 12'b111001000; // (123 y 456 en decimal)
+        #10 num1 = 12'b1100010101; num2 = 12'b101000001; // (789 y 321 en decimal)
+
+        // Finalizar simulación
+        #50 $finish;
+    end
+    initial begin
+        $dumpfile("SumaAri.vcd");
+        $dumpvars(0, SumaAri_tb);
+    end
+    // Monitor para imprimir resultados
+    initial begin
+        $monitor("Time: %0t | num1: %0d | num2: %0d | sum: %0d", $time, num1, num2, sum);
+    end
+endmodule
+```
+El testbench (SumaAri_tb) se utiliza para simular y verificar el correcto funcionamiento del módulo SumaAri. Este genera estímulos de entrada, controla el reloj y el reset, y muestra el resultado de la operación de suma para diferentes valores de num1 y num2.
+
