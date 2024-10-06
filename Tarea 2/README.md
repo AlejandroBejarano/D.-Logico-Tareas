@@ -474,7 +474,7 @@ En el anexo 8.5, se puede observar los casos que se le ingresaron para poder obs
 
 ![M](Fotos/M.png)
 
-En las dos suiguientes imagenes se muestra el consumo de recursos por parte de la FPGA y el consumo de potencia que reportan las herramientas gnerados por el make synth y make pnr
+En las dos suiguientes imagenes se muestra el consumo de recursos por parte de la FPGA y el consumo de potencia que reportan las herramientas gnerados por el make synth y make pnr. 
 
 ![N](Fotos/N.png)
 
@@ -489,7 +489,7 @@ Al estar trabajando con bajo consumo de recursos de puede decir que el modulo es
 
 
 #### Display
-En el modulo del display se van a definir las siguientes variables de entradas y salidas basandose en este codigo []:
+En el modulo del display se van a definir las siguientes variables de entradas y salidas basandose en este codigo [7]:
 
 ##### Entradas
 - `input logic clk`: Señal del clock a 27 MHz.
@@ -504,7 +504,7 @@ En el modulo del display se van a definir las siguientes variables de entradas y
 - `output logic [6:0] seg`: Controla que segmentos del display se enciende
 
 ##### Declaración de constantes
-- `localparam N = 18`: Se usa para dimensionar el contador que gobierna el refresco de los displays segun la fromula que se utilizo en este codigo [].
+- `localparam N = 18`: Se usa para dimensionar el contador que gobierna el refresco de los displays segun la fromula que se utilizo en este codigo [7].
 
 #####  Declaraciones de señales internas
 - `logic [N-1:0] q_reg`: Guarda el valor actual del contador
@@ -831,6 +831,9 @@ El desarrollo del sistema digital sincrónico para la realización de sumas arit
 [5] Oscar Martínez. Tutorías con Ingenio Universidad Nacional, “Divisor de frecuencia en Verilog,” YouTube. Oct. 29, 2016. [Online]. Available: https://www.youtube.com/watch?v=sLz8vAvoils
 
 [6] “Verilog code for debouncing buttons on FPGA,” FPGA4student.com. https://www.fpga4student.com/2017/04/simple-debouncing-verilog-code-for.html
+
+[7] V. T. L. E. De Miguel Alberto Davila Sacoto, “Multiplexación,” Curso De FPGAs, Feb. 26, 2018. https://cursofpga.wordpress.com/2018/02/25/multiplexacion-y-simulacion-de-circuitos-secuenciales/
+
 
 
 
