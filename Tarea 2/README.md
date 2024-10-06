@@ -11,7 +11,7 @@ Diseñar un sistema digital sincrónico en una FPGA, implementando un método qu
 
 ## 2. Introducción
 
-
+Se aborda el diseño de un sistema digital que puede capturar números desde un teclado y realizar sumas aritméticas, mostrando el resultado en una pantalla de 7 segmentos. La idea principal es utilizar un HDL para crear un sistema sincronizado, donde todos los componentes funcionan al mismo ritmo gracias a un "reloj" interno. Esto permite que, al ingresar números con el teclado hexadecimal, estos se almacenen y luego se sumen correctamente, mostrando el resultado en tiempo real en un display de 4 dígitos. Todo el sistema se implementa en una FPGA.
 
 
 ## 3. Objetivos
