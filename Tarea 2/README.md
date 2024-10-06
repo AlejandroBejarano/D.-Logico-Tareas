@@ -799,15 +799,20 @@ Además tambien se provaron el make synth y el make pnr que adecuerdo a los dato
 
 ## 5. Conclusiones
 
-
-
+El desarrollo del sistema digital sincrónico para la realización de sumas aritméticas, demostró la efectividad de cada módulo por separado en SystemVerilo, en donde se manejaron los datos de manera eficiente y sincronizada. El sistema desarrollado no solo cumple con los objetivos planteados por separado, sino que también se debe destacar una importante comunicación para el desarrollode cada parte del sistema.Las pruebas y validaciones realizadas de cada módulo muestran que el sistema puede ser una base al desarrollo correcto de una calculadora que desarrolla sumatorias en un HDL.
 
 
 ## 6. Análisis de principales problemas 
 
+- El principal problema que se presentó fue el mal desarrollo de un sistema de control, con el cuál no se logró implementar la unión de todos los módulos desarrollados.
 
+- Se presentaron varios errores de sintaxis en diferentes módulos.
 
+- En el módulo de almacenamiento no se almacenan correctamente varios valores por lo cuál quedan al "aire".
 
+- No se implemento una buena lectura de los números detectados por el módulo de detector de teclas.
+
+- El módulo de display presenta varios problemas con latches.
 
 
 
