@@ -4,14 +4,13 @@
 ## 1. Resumen
 Este informe presenta los detalles de un programa digital sincrónico, el cual está programado en un lenguaje de hardware (HDL), captura los datos de un teclado hexadecimal y los almacena en binario para después implementar una función aritmética como la suma, y por último, desplegar el resultado en un display de 4 dígitos.
 
+##### Introducción
+
+Se aborda el diseño de un sistema digital que puede capturar números desde un teclado y realizar sumas aritméticas, mostrando el resultado en una pantalla de 7 segmentos. La idea principal es utilizar un HDL para crear un sistema sincronizado, donde todos los componentes funcionan al mismo ritmo gracias a un "reloj" interno. Esto permite que, al ingresar números con el teclado hexadecimal, estos se almacenen y luego se sumen correctamente, mostrando el resultado en tiempo real en un display de 4 dígitos. Todo el sistema se implementa en una FPGA.
 
 ## 2. Problema, objetivos y especificaciones 
 ### Problema 
 Diseñar un sistema digital sincrónico en una FPGA, implementando un método que procese diferentes datos y señales con el mismo reloj, para evitar errores de sincronización. Además, se deben capturar dos números de 3 dígitos cada uno a partir de un teclado hexadecimal, los cuales se presentarán en el display de 4 dígitos a medida que se vayan digitando. Luego, se implementará la función de suma aritmética para que estos dos valores se sumen y el resultado se presente en el display de 7 segmentos. Asimismo, se debe generar un testbench básico para corroborar que todo el sistema funcione correctamente.
-
-## 2. Introducción
-
-Se aborda el diseño de un sistema digital que puede capturar números desde un teclado y realizar sumas aritméticas, mostrando el resultado en una pantalla de 7 segmentos. La idea principal es utilizar un HDL para crear un sistema sincronizado, donde todos los componentes funcionan al mismo ritmo gracias a un "reloj" interno. Esto permite que, al ingresar números con el teclado hexadecimal, estos se almacenen y luego se sumen correctamente, mostrando el resultado en tiempo real en un display de 4 dígitos. Todo el sistema se implementa en una FPGA.
 
 
 ## 3. Objetivos
