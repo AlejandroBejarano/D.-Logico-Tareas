@@ -390,12 +390,12 @@ Además se observa la utilización de una fuente de alimentación VCC, 145  SLIC
 
 
 #### Almacenamiento de datos
-Para el modulo de alamacenamientos de datos primero se definieron las siguientes variables:
+Para el módulo de almacenamiento de datos, primero se definieron las siguientes variables:
 ##### Entradas 
-- `input logic clk`: Señal del clock a 27 MHz
-- `input logic rst`: Señal del reset para iniciar y vaciar los vectores de almacenamiento de datos
-- `input logic [3:0] tecla_pre`: La señal mencionada nateriormente de la tecla que fue selecionada
-- `input logic cargar_numero1`: Señal de control que indica cuándo cargar un número en  `numero1`.
+- `input logic clk`: Señal del reloj a 27 MHz.
+- `input logic rst`: Señal de reinicio para iniciar y vaciar los vectores de almacenamiento de datos.
+- `input logic [3:0] tecla_pre`: La señal mencionada anteriormente de la tecla que fue seleccionada.
+- `input logic cargar_numero1`: Señal de control que indica cuándo cargar un número en `numero1`.
 - `input logic cargar_numero1`: Señal de control que indica cuándo cargar un número en `numero2`.
 - `input logic reset_datos`: Señal de control interna que reinicia los valores de `numero1` y `numero2`, y los índices internos de los números.
 ##### Salidas
@@ -418,11 +418,11 @@ module almacenamiento_datos (
     logic [1:0] indice_numero1; 
     logic [1:0] indice_numero2; 
 ```
-Acontinuación, se va a expliacar el funcionamiento del modulo. 
-- Se inicia con el con el rst ya que se asegura que tanto el `numero1`, `numero2`, `indice_numero1` e `indice_numero2`empiecen en 0. 
-- Se implementa la señal interna de `reset_datos` la cual al activarse vualve a reiniciar el sistema dejando a los numeros y los indices en ceros.
-- En el caso de activarse el `cargar_numero1` el modulo lee la señal `tecla_pre` y deacuerdo a la posicion del `indice_numero1` almacena el dato en la posicion `numero1` despues se incrememta en una posicion y cuando llega al limite se devuelve a 0.
-- En el caso de activarse el `cargar_numero1` sucese la misma logica solo que se trabaja con el `numero2` y el `indice_numero`
+A continuación, se explica el funcionamiento del módulo: 
+- Se inicia con el `rst`, que asegura que tanto `numero1`, `numero2`, `indice_numero1` e `indice_numero2` empiecen en 0.
+- Se implementa la señal interna de `reset_datos`, la cual al activarse vuelve a reiniciar el sistema, dejando a los números y los índices en ceros.
+- En el caso de activarse el `cargar_numero1`, el módulo lee la señal `tecla_pre` y, de acuerdo a la posición del `indice_numero1`, almacena el dato en la posición `numero1`. Después, se incrementa en una posición y, cuando llega al límite, se devuelve a 0.
+- En el caso de activarse el `cargar_numero2`, sucede la misma lógica, solo que se trabaja con el `numero2` y el `indice_numero2`.
 
 ```SystemVerilog
   always_ff @(posedge clk or posedge rst) begin
@@ -470,20 +470,20 @@ Acontinuación, se va a expliacar el funcionamiento del modulo.
         end
     end
 ```
-En el anexo 8.5, se puede observar los casos que se le ingresaron para poder observar el funcionamiento del `module_almacenamiento`, el cual se le dio un ejemplo de algunas teclas que podian ser ingresadas y se muestra como se va guardando en el orde que corresponde, así se puede ver en la imagen del GTKwave.
+En el anexo 8.5, se puede observar los casos que se ingresaron para poder observar el funcionamiento del `module_almacenamiento`, en los cuales se dieron ejemplos de algunas teclas que podían ser ingresadas, y se muestra cómo se van guardando en el orden que corresponde, tal como se puede ver en la imagen del GTKwave.
 
 ![M](Fotos/M.png)
 
-En las dos suiguientes imagenes se muestra el consumo de recursos por parte de la FPGA y el consumo de potencia que reportan las herramientas gnerados por el make synth y make pnr. 
+En las dos siguientes imágenes se muestra el consumo de recursos por parte de la FPGA y el consumo de potencia reportados por las herramientas generadas por el make synth y make pnr.
 
 ![N](Fotos/N.png)
 
 ![O](Fotos/O.png)
 
-Como se puede observar en la imagen para el make pnr la utilizacion de recursos es baja, donde la mayoria de los recursos son slices, LUTs, IOBs ya que el modulo no tiene una gran complejidad, sin embrago esuna ventja ya que le queda una gran cantidad de recursos disponibles.
-Al igual que el make pnr,  el make synth es ligero ya que no cuenta con una gran complejidad, sin ambrago se puede destacar la grancantidad de datos que se estan tranportando por los cables, así como las conexiones que se tiene al exterior. Además se implemento algunos elemetos basicos como DFFCE los cuales son los registros basados en flip-flops, IBUF para manejar las señales de entrada, los Lookup Tables (LUTs) como LUT1 (3), LUT2 (5), LUT3 (5), LUT4 (6), MUX2_LUT5 (3), que pfueron implementados para las funciones buleanas en la FPGA, OBUF para manejar la señales de salida y el GNG para la señal de tierra.
+Como se puede observar en la imagen del make pnr, la utilización de recursos es baja, donde la mayoría de los recursos son slices, LUTs e IOBs, ya que el módulo no tiene gran complejidad. Esto es una ventaja, ya que queda una gran cantidad de recursos disponibles.
+Al igual que el make pnr, el make synth es ligero, ya que no cuenta con gran complejidad. Sin embargo, se puede destacar la gran cantidad de datos que se están transportando por los cables, así como las conexiones que se tienen al exterior. Además, se implementaron algunos elementos básicos como DFFCE, los cuales son los registros basados en flip-flops, IBUF para manejar las señales de entrada, y las Lookup Tables (LUTs) como LUT1 (3), LUT2 (5), LUT3 (5), LUT4 (6), MUX2_LUT5 (3), que fueron implementados para las funciones booleanas en la FPGA. También se usaron OBUF para manejar las señales de salida y GND para la señal de tierra.
 
-Al estar trabajando con bajo consumo de recursos de puede decir que el modulo es eficiente y cuanta con la capacidad de seguir desarrollandolo aún más, sin llegar a sobre cargar la FPGA.
+Al trabajar con bajo consumo de recursos, se puede decir que el módulo es eficiente y cuenta con la capacidad de seguir desarrollándose aún más, sin llegar a sobrecargar la FPGA.
 
 
 
@@ -504,19 +504,19 @@ En el modulo del display se van a definir las siguientes variables de entradas y
 - `output logic [6:0] seg`: Controla que segmentos del display se enciende
 
 ##### Declaración de constantes
-- `localparam N = 18`: Se usa para dimensionar el contador que gobierna el refresco de los displays segun la fromula que se utilizo en este codigo [7].
+- `localparam N = 18`: Se usa para dimensionar el contador que gobierna el refresco de los displays segun la fromula que se utilizo en este codigo [8].
 
 #####  Declaraciones de señales internas
-- `logic [N-1:0] q_reg`: Guarda el valor actual del contador
+- `logic [N-1:0] q_reg`: Guarda el valor actual del contador.
 - `logic [N-1:0] q_next`: Es el valor siguiente (q_reg + 1).
-- `logic [3:0] numero1_in`: Señal para almacenar el numero 1.
-- ` logic [3:0] numero2_in`:Señal para almacenar el numero 2.
-- `logic [3:0] numero_actual_in`: Para saber cual de los dos numeros se va a almacenar.
+- `logic [3:0] numero1_in`: Señal para almacenar el número 1.
+- ` logic [3:0] numero2_in`: Señal para almacenar el número 2.
+- `logic [3:0] numero_actual_in`: Para saber cuál de los dos números se va a almacenar.
 - `logic state`: Estado de la máquina que selecciona entre `numero1` y `numero2`.
 
 ##### Definicion de estado
 - `localparam cargar_numero1 = 1'b0`: Estado en el que se carga y muestra `numero1``.
-- ` localparam cargar_numero2 = 1'b1`: Estado en el que se carga y muestra `numero`.
+- ` localparam cargar_numero2 = 1'b1`: Estado en el que se carga y muestra `numero2`.
 
 ```SystemVerilog
 module module_display(
@@ -545,10 +545,10 @@ module module_display(
     localparam cargar_numero1 = 1'b0;
     localparam cargar_numero2 = 1'b1;
 ```
-Acontinuacion se va a explicar el funcionamiento del modulo del display para 4 digitos:
-- Primero esta el contador de refreco que va ir cambiando entre los digitos del los numeros del display. Donde el `q-reg` se incremeta con cada falco positivo del reloj `clk` y se reinicia a 0 si se activa el `rst`, para alternar ente los digitos.
-- en la `always_comb` se controla cual numero fue selecionado si `numero1` o `numero2` y cual digito en especifico se debe mostar.
-- Por ultimo en la seccion `always_comb` se decodifica el valor de `numero_actual_in` para mostralo en el display de 7 segmentos.
+A continuación se va a explicar el funcionamiento del módulo del display para 4 dígitos:
+- Primero está el contador de refresco que va a ir cambiando entre los dígitos de los números del display. Donde el `q_reg` se incrementa con cada flanco positivo del reloj `clk` y se reinicia a 0 si se activa el `rst`, para alternar entre los dígitos.
+- En la `always_comb` se controla cuál número fue seleccionado, si `numero1` o `numero2`, y cuál dígito en específico se debe mostrar.
+- Por último, en la sección `always_comb` se decodifica el valor de `numero_actual_in` para mostrarlo en el display de 7 segmentos.
 ```SystemVerilog
 
     // Contador de refresco para cambiar entre dígitos de los números
@@ -624,12 +624,13 @@ Acontinuacion se va a explicar el funcionamiento del modulo del display para 4 d
 endmodule
 
 ```
-En el anexo 8.6, se puede observar los casos que se le ingresaron para poder ver el funcionamiento del `module_display`, el cual se le dio un ejemplo de dos numeros que fueron ingresados para poder corroborar que efectivamente presentaba los numeros en el display de 7 segmentos, así se puede ver en la imagen del GTKwave.
+En el anexo 8.6, se pueden observar los casos que se ingresaron para poder ver el funcionamiento del module_display, donde se introdujeron dos números para corroborar que efectivamente se mostraban los números en el display de 7 segmentos, tal como se puede ver en la imagen del GTKwave.
 
-Ademas de su funcionamiento con el comando make wv, también se puede implementar el make synth y make pnr para poder hacer su analisis de cuanto consumo de recursos genera este modulo y como se puede apresiar el la siguiente imagen:
-En el caso del make synth se puede observa una implamentacion significativa de recurso ya que utilizan bastantes cables al igual de la cantidad de conexiones que esta realizando al exterior, tiene un numero elevado de uso de las celdas y incluye componnetes como ALUs, flip-flops, buffers de entrada y salida y LUTs, dejando claro que esta module es mucho más complejo dado que tiene que hacer multiples operacioneslogicas. 
+Además de su funcionamiento con el comando make wv, también se puede implementar el make synth y make pnr para analizar el consumo de recursos que genera este módulo, como se puede apreciar en la siguiente imagen:
 
-Un caso siminlar pasa a la hora de analaisar el make pnr ya que estos dos van de la mano y se muestra que recursos como VCC, GND y GSR esta siendo utilizados el 100%, siembargo existen otros como Slice, IOB y algunas LUTs que muestran una baja utilizacion dando la opornutidad para agregarle ateras adicionales o buscar obtimizaciones.
+En el caso del make synth, se observa una implementación significativa de recursos ya que utilizan bastantes cables, así como la cantidad de conexiones que se están realizando al exterior. Tiene un número elevado de uso de las celdas e incluye componentes como ALUs, flip-flops, buffers de entrada y salida y LUTs, lo que deja claro que este módulo es mucho más complejo, dado que tiene que hacer múltiples operaciones lógicas.
+
+Un caso similar ocurre al analizar el make pnr, ya que estos dos van de la mano, y se muestra que recursos como VCC, GND y GSR están siendo utilizados al 100%. Sin embargo, existen otros como Slice, IOB y algunas LUTs que muestran una baja utilización, dando la oportunidad de agregar tareas adicionales o buscar optimizaciones.
 
 ![P](Fotos/P.png)
 
@@ -694,22 +695,22 @@ El testbench se utiliza para verificar la funcionalidad del módulo SumaAri medi
 
 
 #### Control (maquina de estado)
-En este modulo como se esta trabajando con una maquina de estado acontinuacion se va a presentar el diagrama con el cual se esta implementando la logica del programa:
+En este módulo, como se está trabajando con una máquina de estado, a continuación se presenta el diagrama con el cual se está implementando la lógica del programa:
 
 ![R](Fotos/R.png)
 
 ##### Entradas
 - `input logic clk`: Señal del clock a 27 MHz.
 - `input logic rst`: Señal del reset para iniciar.
-- `input logic a`: Tecla para sumar
-- `input logic b`: Tecla para igualar los datos
-- `input logic c`: Tecla para eliminar datso
-- `input logic [3:0] tecla_pre`: La lectura de las teclas de modulo de captura de teclas
+- `input logic a`: Tecla para sumar.
+- `input logic b`: Tecla para igualar los datos.
+- `input logic c`: Tecla para eliminar datos.
+- `input logic [3:0] tecla_pre`: La lectura de las teclas del módulo de captura de teclas.
 ##### Salidas
 - `output logic cargar_numero1`: Señal que indica cuándo cargar el primer número.
 - `output logic cargar_numero2`: Señal que indica cuándo cargar el segundo número.
-- `output logic rst_datos`: Señal para eliminar datos
-- `output logic igual`: descripción de la salida
+- `output logic rst_datos`: Señal para eliminar datos.
+- `output logic igual`: Descripción de la salida.
 
 
 ```SystemVerilog
@@ -728,10 +729,9 @@ module maquina_estado (
     output logic clk_out
 );
 ```
-Continuando con la idea que se presento en el diagrama para la maquina de estado la logica es la siguiente:
-- Se tienen 3 estado posibles definidos por `typedef enum`, los cuales son S0, S1, S2.
-- La FSM lmacena su estado actual en el regitros `state` y se actualiza cada ciclo de reloj o se reinicia cuando `rst` esta activada y vualve al estado inicial S0 o sino cambi al `nexstate`.
-Con el `always_com` se hace la logica del cambio de estado de acuedo con las entradas a, b, c y el estado actual, entonces de acuerdo a la entrada se decide cual va a ser el proximo `nexstate` y cuales señales deben activarse.Para guiarse se tomo como ejemolo un ejercico del libro[].
+Continuando con la idea que se presentó en el diagrama para la máquina de estado, la lógica es la siguiente:
+- Se tienen 3 estados posibles definidos por `typedef enum`, los cuales son S0, S1, S2.
+- La FSM almacena su estado actual en el registro `state` y se actualiza cada ciclo de reloj o se reinicia cuando `rst` está activada y vuelve al estado inicial S0, o si no cambia al `nextstate`. Con el `always_comb` se hace la lógica del cambio de estado de acuerdo con las entradas `a`, `b`, `c` y el estado actual. Entonces, de acuerdo a la entrada se decide cuál será el próximo `nextstate` y qué señales deben activarse. Para guiarse se tomó como ejemplo un ejercicio del libro [9].
 ```SystemVerilog
     // Definición de estados
     typedef enum logic [1:0] {S0, S1, S2} statetype;
@@ -784,12 +784,11 @@ Con el `always_com` se hace la logica del cambio de estado de acuedo con las ent
 
 endmodule
 ```
-
-En el anexo 8.7, se puede observar los casos que se le ingresaron para poder ver el funcionamiento del `module_maquina_estado`, donde se probo cada tecla para ver si cumplia su funcionaminto al pasar al siguiente estado segmentos, así se puede ver en la imagen del GTKwave.
+En el anexo 8.7, se pueden observar los casos que se ingresaron para ver el funcionamiento del `module_maquina_estado`, donde se probó cada tecla para verificar si cumplía su funcionamiento al pasar al siguiente estado, así se puede ver en la imagen del GTKWave.
 
 ![S](Fotos/S.png)
 
-Además tambien se provaron el make synth y el make pnr que adecuerdo a los datos sintetizados se puede decir que la maquina de estado es un programa simple ya que no consume gran cantidad de recursos, algunas de ellos son  DFFs, buffers de entradas y salidas y varias LUTs en el caso de make synth y con el make pnr utiliza VCC, GDN y GSR llegando a utilizarlos al 100% sin ambargo existen otros que tienen una baja implementacion como SLICE, IOB y varios LUTs o otros que nos los utiliza del todo como ODDR, RAMW y OSC.
+Además, también se probaron los comandos make synth y make pnr. De acuerdo a los datos sintetizados, se puede decir que la máquina de estado es un programa simple ya que no consume gran cantidad de recursos. Algunos de ellos son DFFs, buffers de entrada y salida y varias LUTs en el caso de make synth, y con make pnr utiliza VCC, GND y GSR llegando a utilizarlos al 100%. Sin embargo, existen otros que tienen una baja implementación como SLICE, IOB y varias LUTs, o algunos que no los utiliza del todo como ODDR, RAMW y OSC.
 
 ![T](Fotos/T.png)
 
@@ -818,8 +817,6 @@ El desarrollo del sistema digital sincrónico para la realización de sumas arit
 
 
 ## 7. Referencias
-[0] David Harris y Sarah Harris. *Digital Design and Computer Architecture. RISC-V Edition.* Morgan Kaufmann, 2022. ISBN: 978-0-12-820064-3
-
 [1] R. Gorla and R. Gorla, “Finite state machines in Verilog,” VLSI WEB, Apr. 12, 2024. https://vlsiweb.com/finite-state-machines-in-verilog/
 
 [2] “AMD Technical Information Portal.” https://docs.amd.com/r/en-US/ug901-vivado-synthesis/FSM-Example-Verilog
@@ -833,6 +830,10 @@ El desarrollo del sistema digital sincrónico para la realización de sumas arit
 [6] “Verilog code for debouncing buttons on FPGA,” FPGA4student.com. https://www.fpga4student.com/2017/04/simple-debouncing-verilog-code-for.html
 
 [7] V. T. L. E. De Miguel Alberto Davila Sacoto, “Multiplexación,” Curso De FPGAs, Feb. 26, 2018. https://cursofpga.wordpress.com/2018/02/25/multiplexacion-y-simulacion-de-circuitos-secuenciales/
+
+[8] Curso FPGA, "Multiplexación y simulación de circuitos secuenciales," Curso FPGA Blog, Feb. 25, 2018. [Online]. Available: https://cursofpga.wordpress.com/2018/02/25/multiplexacion-y-simulacion-de-circuitos-secuenciales/. [Accessed: Oct. 8, 2024].
+
+[9] David Harris y Sarah Harris. *Digital Design and Computer Architecture. RISC-V Edition.* Morgan Kaufmann, 2022. ISBN: 978-0-12-820064-3
 
 
 
@@ -1234,8 +1235,7 @@ module module_almacenamiento_tb;
 endmodule
 
 ```
-En este testbench primero se declaran las variables, despues se hace la instancia del modulo, se asigna los valores para el reloj, si inicialisa con el rst en 1 para que todo este en valores de 0, se desactiva el rst y se empiesan a cargar los digitos del numero 1 y depues los digitos del numero 2, depues de un perido de tiempo se eliminan y se reinicia el programa.
-
+En este testbench, primero se declaran las variables, después se hace la instancia del módulo, se asignan los valores para el reloj, se inicializa con el rst en 1 para que todo esté en valores de 0, se desactiva el rst y se empiezan a cargar los dígitos del número 1 y después los dígitos del número 2. Luego, después de un periodo de tiempo, se eliminan y se reinicia el programa.
 
 ### 8.6 Testbench display
 
@@ -1319,7 +1319,7 @@ module module_display_tb;
 
 endmodule
 ```
-En este testbench primero se declaran las variables que se van  autilizar, despues se hace la instancia del modulo, se asigna los valores para el reloj, si inicialisa con el rst y se establacen algunos numeros para probar el funcionamiento del modulo el cual carga el primer numero lo presenta en el display, para ir mostrandolo conforme se digita en el display y despues carga el segundo numero volve hacer la logica y vuelve a su estado inicial.
+En este testbench, primero se declaran las variables que se van a utilizar, después se hace la instancia del módulo, se asignan los valores para el reloj, se inicializa con el rst y se establecen algunos números para probar el funcionamiento del módulo. Este carga el primer número, lo presenta en el display, mostrando los dígitos conforme se van digitando en el display, y luego carga el segundo número. Después, repite la lógica y vuelve a su estado inicial.
 
 ### 8.7 Testbench maquina de control
 ```SystemVerilog
@@ -1397,7 +1397,7 @@ module module_maquina_estado_tb;
 endmodule
 ```
 
-Al igualque en los testbenh anteriores primero declaran las variables que se van  autilizar, despues se hace la instancia del modulo, se asigna los valores para el reloj, si inicialisa con el rst y se pueban algunas teclas para ver el correcto funcionaminedo de la maquina de estado.
+Al igual que en los testbenches anteriores, primero se declaran las variables que se van a utilizar, después se hace la instancia del módulo, se asignan los valores para el reloj, se inicializa con el rst y se prueban algunas teclas para verificar el correcto funcionamiento de la máquina de estados.
 
 ### 8.8 Testbench SumaAri
 
