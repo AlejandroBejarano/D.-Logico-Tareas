@@ -1,0 +1,40 @@
+IO_LOC  "g" 76;
+
+IO_LOC  "f" 75;
+
+IO_LOC  "e" 74;
+
+IO_LOC  "d" 73;
+
+IO_LOC  "c" 72;
+
+IO_LOC  "b" 71;
+
+IO_LOC  "a" 70;
+
+IO_LOC  "Transis[3]" 54;
+
+IO_LOC  "Transis[2]" 55;
+
+IO_LOC  "Transis[1]" 56;
+
+IO_LOC  "Transis[0]" 57;
+
+IO_LOC  "fila[3]" 29;
+
+IO_LOC  "fila[2]" 30;
+
+IO_LOC  "fila[1]" 33;
+
+IO_LOC  "fila[0]" 34;
+
+IO_LOC  "col_3" 25;
+
+IO_LOC  "col_2" 26;
+
+IO_LOC  "col_1" 27;
+
+IO_LOC  "col_0" 28;
+
+IO_LOC  "clk" 52;
+IO_PORT "clk" IO_TYPE=LVCMOS33 PULL_MODE=UP;

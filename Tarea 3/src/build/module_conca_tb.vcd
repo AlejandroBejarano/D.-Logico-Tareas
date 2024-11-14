@@ -1,0 +1,53 @@
+$date
+	Fri Nov 01 15:47:43 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module conca_tb $end
+$var wire 7 ! num [6:0] $end
+$var reg 4 " dec [3:0] $end
+$var reg 4 # uni [3:0] $end
+$scope module conca $end
+$var wire 4 $ dec [3:0] $end
+$var wire 4 % uni [3:0] $end
+$var reg 7 & num [6:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b1 &
+b1 %
+b0 $
+b1 #
+b0 "
+b1 !
+$end
+#10000
+b1011 !
+b1011 &
+b1 "
+b1 $
+#20000
+b10101 !
+b10101 &
+b10 "
+b10 $
+#30000
+b101001 !
+b101001 &
+b100 "
+b100 $
+#40000
+b1010001 !
+b1010001 &
+b1000 "
+b1000 $
+#50000

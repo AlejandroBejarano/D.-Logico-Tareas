@@ -1,0 +1,152 @@
+$date
+	Thu Nov 14 10:22:25 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module anillo_tb $end
+$var wire 4 ! fila [3:0] $end
+$var parameter 32 " WIDTH $end
+$var reg 1 # clk $end
+$var reg 1 $ rst $end
+$scope module anillo_inst_tb $end
+$var wire 1 # clk $end
+$var wire 1 $ rst $end
+$var parameter 32 % WIDTH $end
+$var reg 4 & fila [3:0] $end
+$scope begin $ivl_for_loop0 $end
+$var integer 32 ' i [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+b100 %
+b100 "
+$end
+#0
+$dumpvars
+b0 '
+bx &
+0$
+0#
+bx !
+$end
+#18500
+b1 !
+b1 &
+1#
+#37000
+0#
+#55500
+1$
+1#
+#74000
+0#
+#92500
+b1000 !
+b1000 &
+b11 '
+1#
+#111000
+0#
+#129500
+b100 !
+b100 &
+b11 '
+1#
+#148000
+0#
+#166500
+b10 !
+b10 &
+b11 '
+1#
+#185000
+0#
+#203500
+b1 !
+b1 &
+b11 '
+1#
+#222000
+0#
+#240500
+b1000 !
+b1000 &
+b11 '
+1#
+#259000
+0#
+#277500
+b100 !
+b100 &
+b11 '
+1#
+#296000
+0#
+#314500
+b10 !
+b10 &
+b11 '
+1#
+#333000
+0#
+#351500
+b1 !
+b1 &
+b11 '
+1#
+#370000
+0#
+#388500
+b1000 !
+b1000 &
+b11 '
+1#
+#407000
+0#
+#425500
+b100 !
+b100 &
+b11 '
+1#
+#444000
+0#
+#462500
+b10 !
+b10 &
+b11 '
+1#
+#481000
+0#
+#499500
+b1 !
+b1 &
+b11 '
+1#
+#518000
+0#
+#536500
+b1000 !
+b1000 &
+b11 '
+1#
+#555000
+0#
+#573500
+b100 !
+b100 &
+b11 '
+1#
+#592000
+0#
+#610500
+b10 !
+b10 &
+b11 '
+1#

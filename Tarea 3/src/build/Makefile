@@ -6,7 +6,7 @@ FAMILY = GW1N-9C
 DEVICE = GW1NR-LV9QN88PC6/I5
 
 #Nombre del proyecto... Acá ponen el nombre que deseen.
-PROYECT = 
+PROYECT = Multiplicador
 
 #Fuentes de diseno
 SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv que estan en design
@@ -15,18 +15,47 @@ SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv 
 
 #Fuente de simulacion
 #aca va el testbench que quieran simular
-TESTBENCH = ../sim/TB.sv
+#TESTBENCH = ../sim/anillo_cont.sv
+#TESTBENCH = ../sim/conca_tb.sv
+#TESTBENCH = ../sim/divisor_tb.sv
+#TESTBENCH = ../sim/rebote_tb.sv
+#TESTBENCH = ../sim/multiplicador_tb.sv
+#TESTBENCH = ../sim/separar_num_tb.sv
+#TESTBENCH = ../sim/display_tb.sv
+TESTBENCH = ../sim/detector_tb.sv
 
 # Constraints para el proyecto
 #aca va el archivo de constraints del proyecto
-CONSTRAINTS = ../constr/CONSTRAINTS.cst
+CONSTRAINTS = ../constr/const.cst
 
 #el top se indica sin la extension .v, esto hace referencia al nombre que le pusieron al módulo y no al archivo en si.
-TOP_DESIGN = 
-TOP_TB     = 
+TOP_DESIGN = detector_columna
+TOP_TB     = detector_tb
+#TOP_DESIGN = anillo_ctdr
+#TOP_TB     = anillo_tb
+#TOP_DESIGN = concatenar_num
+#TOP_TB = conca_tb
+#TOP_DESIGN = divisor
+#TOP_TB = divisor_tb
+#TOP_DESIGN = rebote
+#TOP_TB = rebote_tb
+#TOP_DESIGN = multiplicador
+#TOP_TB = multiplicador_tb
+#TOP_DESIGN = separar_num
+#TOP_TB = separar_num_tb
+#TOP_DESIGN = display
+#TOP_TB = display_tb
+
 
 #nombre del vcd que va a generar el tb
-VCD_FILE = 
+#VCD_FILE = module_cont_anillo_tb.vcd
+#VCD_FILE = module_conca_tb.vcd
+#VCD_FILE = module_divisor_tb.vcd
+#VCD_FILE = module_rebote_tb.vcd
+#VCD_FILE = multiplicador_tb.vcd
+#VCD_FILE = module_display_tb.vcd
+#VCD_FILE = module_separar_num_tb.vcd
+VCD_FILE = module_detector_tb.vcd
 
 
 all: synth pnr bitstream load
