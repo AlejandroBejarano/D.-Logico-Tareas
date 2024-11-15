@@ -1,0 +1,85 @@
+$date
+	Fri Nov 15 13:54:25 2024
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1ps
+$end
+$scope module almacenamiento_tb $end
+$var wire 12 ! num_result2 [11:0] $end
+$var wire 12 " num_result1 [11:0] $end
+$var reg 1 # almac $end
+$var reg 1 $ clk $end
+$var reg 4 % num1_dec1 [3:0] $end
+$var reg 4 & num1_dec2 [3:0] $end
+$var reg 4 ' num2_dec1 [3:0] $end
+$var reg 4 ( num2_dec2 [3:0] $end
+$var reg 1 ) rst $end
+$scope module uut $end
+$var wire 1 # almac $end
+$var wire 1 $ clk $end
+$var wire 4 * num1_dec1 [3:0] $end
+$var wire 4 + num1_dec2 [3:0] $end
+$var wire 4 , num2_dec1 [3:0] $end
+$var wire 4 - num2_dec2 [3:0] $end
+$var wire 1 ) rst $end
+$var reg 12 . num_result1 [11:0] $end
+$var reg 12 / num_result2 [11:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+$comment Show the parameter values. $end
+$dumpall
+$end
+#0
+$dumpvars
+b0 /
+b0 .
+b0 -
+b0 ,
+b0 +
+b0 *
+1)
+b0 (
+b0 '
+b0 &
+b0 %
+0$
+0#
+b0 "
+b0 !
+$end
+#5000
+1$
+#10000
+0$
+b111 &
+b111 +
+b100 %
+b100 *
+1#
+0)
+#15000
+b1000111 "
+b1000111 .
+1$
+#20000
+0$
+b11 (
+b11 -
+b1000 '
+b1000 ,
+b0 &
+b0 +
+b0 %
+b0 *
+#25000
+b10000011 !
+b10000011 /
+b0 "
+b0 .
+1$
+#30000
+0$

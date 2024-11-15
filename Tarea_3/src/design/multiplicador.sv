@@ -1,6 +1,4 @@
 
-
-
 //Contador de anillo filas
 //******************************
 //******************************
@@ -608,9 +606,46 @@ endmodule
 
 
 
-//Multiplicador
+
+
+//Almacenamiento
+//**********************************
+//**********************************
+module almacenamiento(
+    input logic clk,
+    input logic rst,
+    input logic almac,
+    input logic [3:0] num1_dec1,   // Primer número de 4 bits para numero1
+    input logic [3:0] num1_dec2,   // Segundo número de 4 bits para numero1
+    input logic [3:0] num2_dec1,   // Primer número de 4 bits para numero2
+    input logic [3:0] num2_dec2,   // Segundo número de 4 bits para numero2
+    output logic [11:0] num_result1,  // Resultado de la concatenación de num1
+    output logic [11:0] num_result2   // Resultado de la concatenación de num2
+);
+
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            num_result1 <= 12'b0;
+            num_result2 <= 12'b0;
+        end else if (almac) begin
+            // Concatenar los números de 4 bits y almacenarlos
+            num_result1 <= {num1_dec1, num1_dec2}; // Concatenación de num1_dec1 y num1_dec2
+            num_result2 <= {num2_dec1, num2_dec2}; // Concatenación de num2_dec1 y num2_dec2
+        end
+    end
+
+endmodule
+
+
+
+
+
+//Multiplicador Fuuncional
 //******************************
 //******************************
+`timescale 1ns/1ps
+
+//Para poder hacer el make synth y el make pnr por el tema del mult_control
 
 typedef struct packed {
     logic load_A; 
@@ -618,65 +653,77 @@ typedef struct packed {
     logic load_add; 
     logic shift_HQ_LQ_Q_1; 
     logic add_sub; 
-}   mult_control_t ;
+} mult_control_t;
 
-module multiplicador#( parameter N = 8 )( 
-
+// Módulo multiplicador
+module multiplicador #(parameter N = 8)(
     input logic clk,
     input logic rst,
     input logic [N-1:0] A,
     input logic [N-1:0] B,
-    input mult_control_t mult_control,
+    input mult_control_t mult_control, // Esto debe estar definido en el testbench
     output logic [1:0] Q_LSB, 
     output logic [2*N-1:0] Y 
-
 ); 
-  
+
     logic [N-1:0] M; 
     logic [N-1:0] adder_sub_out; 
-    logic [2*N:0] shift; 
+    logic [2*N-1:0] shift; 
     logic [N-1:0] HQ; 
     logic [N-1:0] LQ; 
     logic Q_1; 
-        
+
     // reg_M    
-    always_ff@(posedge clk) begin 
+    always_ff @(posedge clk) begin 
         if (rst) 
             M <= 'b0; 
         else if (mult_control.load_A)
             M <= A;
     end 
-    
+
     // adder/sub
-    always_comb begin 
-        if (mult_control.add_sub) begin
-            adder_sub_out = M + HQ;
-        end
-        else begin
-            adder_sub_out = M - HQ;
-        end
+    always_ff @(posedge clk) begin 
+        if (mult_control.add_sub) 
+            adder_sub_out <= M + HQ;
+        else 
+            adder_sub_out <= M - HQ;
     end 
+
+    // Shift registers and assignments
+    always_ff @(posedge clk or posedge rst) begin
+        if (rst) begin
+            HQ <= 'b0;
+            LQ <= 'b0;
+            Q_1 <= 1'b0;
+        end else begin
+            // Usar variables temporales para evitar selecciones constantes
+            logic [N-1:0] temp_HQ;
+            logic [N-1:0] temp_LQ;
+            logic temp_Q_1;
+
+            temp_HQ = shift[2*N-1:N]; // Asignación temporal
+            temp_LQ = shift[N-1:1];
+            temp_Q_1 = shift[0];
+
+            HQ <= temp_HQ;
+            LQ <= temp_LQ;
+            Q_1 <= temp_Q_1;
+        end
+    end
     
-    // Asignaciones continuas para evitar el uso de selectores constantes en bloques always_*
-    assign HQ = shift[2*N:N+1];
-    assign LQ = shift[N:1];
-    assign Q_1 = shift[0];
     assign Q_LSB = {LQ[0], Q_1};
     assign Y = {HQ, LQ};
 
-    // Shift registers
-    always_ff@(posedge clk) begin 
+    always_ff @(posedge clk) begin 
         if (rst) 
             shift <= 'b0; 
         else if (mult_control.shift_HQ_LQ_Q_1) 
-            // arithmetic shift 
             shift <= $signed(shift) >>> 1; 
         else begin 
             if (mult_control.load_B) 
-                shift[N:1] <= B; 
+                shift[N-1:1] <= B; 
             if (mult_control.load_add) 
-                shift[2*N:N+1] <= adder_sub_out; 
-        end 
-    end 
-
+                shift[2*N-1:N] <= adder_sub_out; 
+        end
+    end //
 endmodule
