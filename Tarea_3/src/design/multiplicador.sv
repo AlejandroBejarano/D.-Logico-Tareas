@@ -457,3 +457,95 @@ module codificador_bcd (
     end
 endmodule
 
+
+//********************************************
+//********************************************
+//Intento del modulo general
+module sistema_teclado_display (
+    input logic clk,           // Reloj del sistema
+    input logic rst,           // Señal de reset
+    input logic boton,         // Botón con debounce
+    input logic [3:0] col,     // Entradas de columnas del teclado matricial
+    output logic [6:0] seg,    // Segmentos del display
+    output logic [3:0] anodes  // Anodos del display de 7 segmentos
+);
+
+    // Señales internas
+    logic [3:0] tecla_pre;        // Tecla detectada (salida del detector de columnas)
+    logic menos, multiplicador, igual;  // Salidas para teclas especiales
+    logic [3:0] fila;             // Salida del contador de anillo (fila activa)
+    logic clk_div;                // Reloj dividido para el display
+    logic boton_sal;              // Botón con debounce
+    logic [11:0] num_result1, num_result2; // Números almacenados
+    logic [3:0] uni, dec, cen, mill;       // Dígitos separados en BCD
+    logic [15:0] result;          // Número a mostrar en el display
+
+    // Instancia del contador de anillo (controla las filas del teclado)
+    anillo_ctdr #(4) contador (
+        .clk(clk_div), 
+        .rst(rst), 
+        .fila(fila)
+    );
+
+    // Instancia del detector de columnas con FSM (detecta la tecla presionada)
+    detector_columna detector (
+        .clk(clk), 
+        .rst(rst), 
+        .fila(fila), 
+        .col_0(col[0]), 
+        .col_1(col[1]), 
+        .col_2(col[2]), 
+        .col_3(col[3]), 
+        .tecla_pre(tecla_pre), 
+        .menos(menos), 
+        .multiplicador(multiplicador), 
+        .igual(igual)
+    );
+
+    // Instancia del divisor de reloj para generar un reloj lento
+    divisor divisor_clk (
+        .clk(clk), 
+        .clk_div(clk_div)
+    );
+
+    // Instancia del módulo de rebote para el botón
+    rebote debounce (
+        .clk(clk), 
+        .boton(boton), 
+        .boton_sal(boton_sal)
+    );
+
+    // Instancia del módulo de almacenamiento (almacena los números ingresados)
+    almacenamiento almacen (
+        .clk(clk), 
+        .rst(rst), 
+        .almac(boton_sal), 
+        .num1_dec1(tecla_pre), 
+        .num1_dec2(4'b0000), // Puedes definir los valores específicos según el número
+        .num2_dec1(4'b0000), 
+        .num2_dec2(4'b0000), 
+        .num_result1(num_result1), 
+        .num_result2(num_result2)
+    );
+
+    // Instancia del separador de números para convertir un número de 16 bits en BCD
+    separar_num separador (
+        .num(result), 
+        .uni(uni), 
+        .dec(dec), 
+        .cen(cen), 
+        .mill(mill)
+    );
+
+    // Lógica para combinar los resultados de almacenamiento y mostrarlos en el display
+    assign result = {num_result1[7:0], num_result2[7:0]}; // Ajustar según el formato deseado
+
+    // Instancia del módulo de display de 7 segmentos
+    display controlador_display (
+        .clk(clk), 
+        .Seg(seg), 
+        .anodes(anodes), 
+        .result(result)
+    );
+
+endmodule
