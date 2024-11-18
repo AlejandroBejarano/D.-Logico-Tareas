@@ -24,16 +24,16 @@ SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv 
 #TESTBENCH = ../sim/display_tb.sv
 #TESTBENCH = ../sim/detector_tb.sv
 #TESTBENCH = ../sim/multiplicador_tb.sv
-TESTBENCH = ../sim/almacenamiento_tb.sv
+#TESTBENCH = ../sim/almacenamiento_tb.sv
+TESTBENCH = ../sim/codificador_bcd_tb.sv
 
 # Constraints para el proyecto
 #aca va el archivo de constraints del proyecto
 CONSTRAINTS = ../constr/const.cst
 
 #el top se indica sin la extension .v, esto hace referencia al nombre que le pusieron al módulo y no al archivo en si.
-TOP_DESIGN = almacenamiento
-TOP_TB     = almacenamiento_tb
-
+#TOP_DESIGN = almacenamiento
+#TOP_TB     = almacenamiento_tb
 #TOP_DESIGN = multiplicador
 #TOP_TB     = multiplicador_tb
 #TOP_DESIGN = detector_columna
@@ -52,6 +52,8 @@ TOP_TB     = almacenamiento_tb
 #TOP_TB = separar_num_tb
 #TOP_DESIGN = display
 #TOP_TB = display_tb
+TOP_DESIGN = codificador_bcd
+TOP_TB = codificador_bcd_tb
 
 
 #nombre del vcd que va a generar el tb
@@ -60,11 +62,12 @@ TOP_TB     = almacenamiento_tb
 #VCD_FILE = module_divisor_tb.vcd
 #VCD_FILE = module_rebote_tb.vcd
 #VCD_FILE = multiplicador_tb.vcd
-#VCD_FILE = module_display_tb.vcd
+#VCD_FILE = display_tb.vcd
 #VCD_FILE = module_separar_num_tb.vcd
 #VCD_FILE = module_detector_tb.vcd
 #VCD_FILE = multiplicador_tb.vcd
-VCD_FILE = almacenamiento_tb.vcd
+#VCD_FILE = almacenamiento_tb.vcd
+VCD_FILE = codificador_bcd_tb.vcd
 
 
 all: synth pnr bitstream load
