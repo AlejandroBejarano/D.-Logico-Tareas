@@ -1,24 +1,24 @@
-IO_LOC  "g" 76;
+IO_LOC  "seg[6]" 76;
 
-IO_LOC  "f" 75;
+IO_LOC  "seg[5]" 75;
 
-IO_LOC  "e" 74;
+IO_LOC  "seg[4]" 74;
 
-IO_LOC  "d" 73;
+IO_LOC  "seg[3]" 73;
 
-IO_LOC  "c" 72;
+IO_LOC  "seg[2]" 72;
 
-IO_LOC  "b" 71;
+IO_LOC  "seg[1]" 71;
 
-IO_LOC  "a" 70;
+IO_LOC  "seg[0]" 70;
 
-IO_LOC  "Transis[3]" 54;
+IO_LOC  "an[3]" 54;
 
-IO_LOC  "Transis[2]" 55;
+IO_LOC  "an[2]" 55;
 
-IO_LOC  "Transis[1]" 56;
+IO_LOC  "an[1]" 56;
 
-IO_LOC  "Transis[0]" 57;
+IO_LOC  "an[0]" 57;
 
 IO_LOC  "fila[3]" 29;
 

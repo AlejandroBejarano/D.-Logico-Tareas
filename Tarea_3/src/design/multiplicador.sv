@@ -1,29 +1,77 @@
 // Control
 //*******************************************
 //*******************************************
+// A es menos pero cambia a mas
+// B es multi
+// C es resultado (igual)
+// D (eliminar extra)
 
 module control (
+    //entradas
     input logic clk,
-    input logic rst,
     input logic col_0, 
     input logic col_1, 
     input logic col_2, 
     input logic col_3
-    
-    output logic [6:0] Seg,
-    output logic [3:0] anodes,
+
+    //Salidas
+    output logic [6:0] seg,
+    output logic [3:0] an,
     output logic [3:0]fila
 );
 
     //Variables temporales
-    //*******************
+    //-----------------
+    logic rst;
+    
+    //Separador y BCD
+    logic [15:0] binary_in; 
+    logic[15:0] bcd_out;   
 
+    logic [13:0] numero;
+    logic [3:0] unidades,
+    logic [3:0] decenas;
+    logic [3:0] centenas;
+    logic [3:0] millares;
+    
     //teclado
     logic [3:0]tecla_pre;
     logic menos;
     logic multiplicador;
     logic igual;
     logic [3:0] tecla;
+
+    //contador de tecla
+    logic [2:0] tecla_cont;
+
+    //Display
+    logic [15:0] result;
+    logic [3:0] An;
+    logic [6:0] Seg;
+
+    //Almacenamiento
+    logic almac;
+    logic [3:0] num1_dec1;
+    logic [3:0] num1_dec2;
+    logic [3:0] num2_dec1;
+    logic [3:0] num2_dec2;
+    logic [11:0] num_result1;
+    logic [11:0] num_result2;
+    
+    //operacion
+    logic [3:0] tecla_opera;
+
+    //Multiplicador
+    logic [7:0] num1;
+    logic [7:0] num2;
+    logic start;
+    logic [15:0] resultado;
+    logic done;
+
+    //assign result = resultado;
+
+    //Suma
+    logic sum;
 
 
     //Instancias
@@ -33,6 +81,20 @@ module control (
         .rst(rst),
         .fila(fila)
     );
+    
+    cont_tecla inst_tecla_cont(
+        .clk(clk),
+        .rst(rst),
+        .tecla(tecla_pre),
+        .tecla_cont(tecla_cont)
+    );
+    // 001 decenas num1
+    // 010 unidades num1
+    // 011 operacion
+    // 100 decenas num2
+    // 101 unidades num2
+    // 110 resultado (C)
+
 
     Rebote insta_rebo_tecla (
         .clk(clk),
@@ -40,17 +102,63 @@ module control (
         .boton_sal(tecla)
     );
 
+    almacenamiento inst_alma(
+        .clk(clk),
+        .rst(rst),
+        .almac(almac), //variable 1 o 0
+        .num1_dec1(num1_dec1), 
+        .num1_dec2(num1_dec2),  
+        .num2_dec1(num2_dec1),   
+        .num2_dec2(num2_dec2),   
+        .num_result1(num_result1), 
+        .num_result2(num_result2)
+    );
 
 
+    display inst_displ (
+        .result(result)
+        .clk(clk),
+        .Seg(Seg),
+        .anodes(An), 
+    );
 
+    multiplicador inst_mult(
+        .A(num1), 
+        .B(num2), 
+        .clk(clk), 
+        .start(start),   
+        .resultado(resultado), 
+        .done(done)
+    );
 
+    separar_num inst_separar (
+        .num (numero),
+        .uni(unidades),
+        .dec(decenas),
+        .cen(centenas),
+        .mill(millares)
+|   );
 
+    codificador_bcd inst_codificador(
+        .clk(clk),
+        .binary_in(binary_in),
+        .bcd_out(bcd_out)
+
+    );
+
+    module SumaAri (
+        .clk(clk),
+        .rst(rst),
+        .num1(num1),
+        .num2(num2),
+        .sum(sum)  
+);
 
     //FSM
     //******************* 
 
     typedef enum logic [2:0] { 
-        E0, E1 , E2, E3, E4
+        E0, E1 , E2, E3, E4, E5
     } estado;
 
         //Para el estado actual
@@ -99,43 +207,193 @@ module control (
                     else if (col_3 != 4'b0) tecla_pre = 4'b1101; //D
                     else estado_sig = E0;
                 end
-                else if (tecla_pre != 4'b1111)begin
-                    if ()
+                else if (tecla_cont == 3'b001 || tecla_cont == 3'b100) estado_sig = E1; //Pasa al estado de decimal.
+                else if (tecla_cont == 3'b010 || tecla_cont == 3'b101) estado_sig = E2; //Pasa al estado de unidades.
+                else if (tecla_cont == 3'b011 || tecla_cont == 3'b110) estado_sig = E3; //Pasa al estado de operacion.
+                else begin
+                    estado_sig = E0; //Estado de espera.
                 end
+            end
 
-                else begin 
+            //Decenas
+            E1: begin
+                if (tecla_cont == 3'b001) begin
+                    tecla <= tecla_pre;
+                    if (almac == 1) begin 
+                        num1_dec1 <= tecla;
+                        result <= num1_dec1;
+                        seg[0] = Seg[0];
+                        seg[1] = Seg[1];
+                        seg[2] = Seg[2];
+                        seg[3] = Seg[3];
+                        seg[4] = Seg[4];
+                        seg[5] = Seg[5];
+                        seg[6] = Seg[6];
+                        an[0] = An[0];
+                        an[1] = An[1];
+                        an[2] = An[2];
+                        an[3] = An[3]; 
+                    end
+                    almac <= 1'b1;
+                end 
+                else if (tecla_cont == 3'b100) begin 
+                    tecla <= tecla_pre;
+                    if (almac == 1) begin
+                        num2_dec1 <= tecla;
+                        result <= num2_dec1;
+                        seg[0] = Seg[0];
+                        seg[1] = Seg[1];
+                        seg[2] = Seg[2];
+                        seg[3] = Seg[3];
+                        seg[4] = Seg[4];
+                        seg[5] = Seg[5];
+                        seg[6] = Seg[6];
+                        an[0] = An[0];
+                        an[1] = An[1];
+                        an[2] = An[2];
+                        an[3] = An[3]; 
+                    end
+                    almac <= 1'b1;
+                end
+                    else begin 
                     estado_sig = E0;
                 end
             end
-
-            E1: begin
-
-            end
-
+           
+        // Unidades
             E2: begin
+                if (tecla_cont == 3'b010) begin
+                    tecla <= tecla_pre;
+                    almac <= 1'b1;
 
+                    if (almac == 1) begin 
+                        num1_dec2 <= tecla;
+                        result <= num1_dec2;
+                        seg[0] = Seg[0];
+                        seg[1] = Seg[1];
+                        seg[2] = Seg[2];
+                        seg[3] = Seg[3];
+                        seg[4] = Seg[4];
+                        seg[5] = Seg[5];
+                        seg[6] = Seg[6];
+                        an[0] = An[0];
+                        an[1] = An[1];
+                        an[2] = An[2];
+                        an[3] = An[3]; 
+                    end   
+                end 
+                else if (tecla_cont == 3'b100) begin 
+                    tecla <= tecla_pre;
+                    almac <= 1'b1;
+
+                    if (almac ==1) begin
+                        num2_dec2 <= tecla_pre;
+                        result <= num2_dec2;
+                        seg[0] = Seg[0];
+                        seg[1] = Seg[1];
+                        seg[2] = Seg[2];
+                        seg[3] = Seg[3];
+                        seg[4] = Seg[4];
+                        seg[5] = Seg[5];
+                        seg[6] = Seg[6];
+                        an[0] = An[0];
+                        an[1] = An[1];
+                        an[2] = An[2];
+                        an[3] = An[3]; 
+                    end 
+                end 
+                else begin 
+                    estado_sig = E0;
+                end 
             end
 
             E3: begin
-
+                if (tecla_cont == 3'b011) begin
+                    if (tecla_pre == 4'b1011) begin //Multiplicacion
+                        tecla_opera = tecla_pre;
+                        if (tecla_opera == tecla_pre) estado_sig = E0;
+                        else begin
+                            estado_sig = E0;
+                        end
+                    end
+                    else if (tecla_pre == 4'b1010) begin //suma
+                        tecla_opera = tecla_pre;
+                        if (tecla_opera == tecla_pre) estado_sig = E0;
+                        else begin
+                            estado_sig = E0;
+                        end
+                    end
+                    else begin
+                        estado_sig = E0;
+                    end
+                end
+                else if (tecla_cont == 3'b110) begin
+                    if (tecla_pre == 4'b1100) begin
+                        if (tecla_opera == 4'b1011) estado_sig = E4;
+                        else if (tecla_opera == 4'b1010) estado_sig = E5;
+                        else begin
+                            estado_sig = E0;
+                        end
+                    end
+                end
+                else begin
+                    estado_sig = E0;
+                end
             end
             
             E4: begin
-
+                if (tecla_cont == 3'b110 && tecla_opera == 4'b1011 ) begin 
+                    start == 1'b1;
+                    if (star == 1) begin
+                        A <= num_result1
+                        B <= num_result2
+                    end
+                    else if (done == 1) begin
+                    binary_in <= resultado
+                    result <= bcd_out
+                        seg[0] = Seg[0];
+                        seg[1] = Seg[1];
+                        seg[2] = Seg[2];
+                        seg[3] = Seg[3];
+                        seg[4] = Seg[4];
+                        seg[5] = Seg[5];
+                        seg[6] = Seg[6];
+                        an[0] = An[0];
+                        an[1] = An[1];
+                        an[2] = An[2];
+                        an[3] = An[3]; 
+                    end 
+                else begin
+                    estado_sig = E0;
+                end
+                end
+            end 
+            E5: begin
+                if (tecla_opera == 4'b1010) begin
+                    if (num1 != 4'b0 && num2 != 4'b0) begin
+                        result = sum;
+                        seg[0] = Seg[0];
+                        seg[1] = Seg[1];
+                        seg[2] = Seg[2];
+                        seg[3] = Seg[3];
+                        seg[4] = Seg[4];
+                        seg[5] = Seg[5];
+                        seg[6] = Seg[6];
+                        an[0] = An[0];
+                        an[1] = An[1];
+                        an[2] = An[2];
+                        an[3] = An[3]; 
+                    end
+                end
+                else if (tecla_opera != 4'b1010) estado_sig = E0;
+                else begin
+                    estado_sig = E0;
+                end
             end
             default: estado_sig = E0;
-
         endcase
     end
 endmodule
-
-
-
-
-
-
-
-
 
 
 //Contador de anillo filas
@@ -371,6 +629,37 @@ module FF_D_habilitador(
 endmodule 
 
 
+// Contador de tecla_pre
+//****************************
+//****************************
+
+module cont_tecla (
+    input logic clk,
+    input logic rst,
+    input logic [3:0] tecla_pre,
+
+    output logic [2:0] tecla_cont
+);
+
+logic [3:0] tecla_ant;
+
+always_ff @(posedge clk or posedge rst) begin
+    if (rst) begin
+        tecla_ant <= 4'b0000;
+        tecla_cont <= 3'b000;
+    end
+    else if (tecla_pre != tecla_ant) begin
+        tecla_ant <= tecla_pre;
+        tecla_cont <= tecla_cont + 1;
+    end
+end
+endmodule
+
+
+
+
+
+
 ///Almacenamiento
 //**********************************
 //**********************************
@@ -448,10 +737,10 @@ endmodule
 `timescale 1ns / 1ps
 
 module display (
+    input logic [15:0] result
     input logic clk,
     output logic [6:0] Seg,
     output logic [3:0] anodes,
-    input logic [15:0] result
 );
 
     logic [6:0] number;
@@ -600,6 +889,28 @@ module codificador_bcd (
     end
 endmodule
 
+
+//suma
+//**************************
+//*************************
+
+module SumaAri (
+    input logic clk,           // Señal de reloj
+    input logic rst,         // Señal de reset activa baja
+    input logic [11:0] num1,   // Primer número de entrada (3 dígitos decimales)
+    input logic [11:0] num2,   // Segundo número de entrada (3 dígitos decimales)
+    output logic [13:0] sum    // Resultado de la suma (máximo 4 dígitos decimales)
+);
+
+    always_ff @(posedge clk or negedge rst) begin
+        if (!rst) begin
+            sum <= 14'd0; // Resetear el resultado de la suma
+        end else begin
+            sum <= num1 + num2; // Realizar la suma aritmética
+        end
+    end
+
+endmodule
 
 //********************************************
 //********************************************
