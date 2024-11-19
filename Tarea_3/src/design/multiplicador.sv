@@ -1,3 +1,143 @@
+// Control
+//*******************************************
+//*******************************************
+
+module control (
+    input logic clk,
+    input logic rst,
+    input logic col_0, 
+    input logic col_1, 
+    input logic col_2, 
+    input logic col_3
+    
+    output logic [6:0] Seg,
+    output logic [3:0] anodes,
+    output logic [3:0]fila
+);
+
+    //Variables temporales
+    //*******************
+
+    //teclado
+    logic [3:0]tecla_pre;
+    logic menos;
+    logic multiplicador;
+    logic igual;
+    logic [3:0] tecla;
+
+
+    //Instancias
+    ///*************
+    anillo_ctdr insta_cont_anillo1 (
+        .clk(clk),
+        .rst(rst),
+        .fila(fila)
+    );
+
+    Rebote insta_rebo_tecla (
+        .clk(clk),
+        .boton(tecla_pre), 
+        .boton_sal(tecla)
+    );
+
+
+
+
+
+
+
+    //FSM
+    //******************* 
+
+    typedef enum logic [2:0] { 
+        E0, E1 , E2, E3, E4
+    } estado;
+
+        //Para el estado actual
+    always_ff @(posedge clk or posedge rst)begin
+        if (rst)begin
+            estado_act <= E0; //estado de espera
+        end 
+        else begin
+            estado_act <= estado_sig;
+        end
+    end
+
+
+    //Logica de cada estado
+    always_ff @(posedge clk) begin
+        estado_sig = estado_act;
+        //tecla_pre = 4'bxxxx;
+        case(estado_act)
+
+            E0: begin
+                if(fila == 4'b0001) begin
+                    if (col_0 != 4'b0) tecla_pre = 4'b0001; //1
+                    else if (col_1 != 4'b0) tecla_pre = 4'b0010; //2
+                    else if (col_2 != 4'b0) tecla_pre = 4'b0011; //3
+                    else if (col_3 != 4'b0) tecla_pre = 4'b1010; //A
+                    else estado_sig = E0;
+                end
+                else if(fila == 4'b0010) begin
+                    if (col_0 != 4'b0) tecla_pre = 4'b0100; //4
+                    else if (col_1 != 4'b0) tecla_pre = 4'b0101; //5
+                    else if (col_2 != 4'b0) tecla_pre = 4'b0110; //6
+                    else if (col_3 != 4'b0) tecla_pre = 4'b1011; //B
+                    else estado_sig = E0;
+                end
+                else if(fila == 4'b0100) begin
+                    if (col_0 != 4'b0) tecla_pre = 4'b0111; //7
+                    else if (col_1 != 4'b0) tecla_pre = 4'b1000; //8
+                    else if (col_2 != 4'b0) tecla_pre = 4'b1001; //9
+                    else if (col_3 != 4'b0) tecla_pre = 4'b1100; //C
+                    else estado_sig = E0;
+                end
+                else if(fila == 4'b1000) begin
+                    if (col_0 != 4'b0) tecla_pre = 4'b1110; //E
+                    else if (col_1 != 4'b0) tecla_pre = 4'b0000; //0
+                    else if (col_2 != 4'b0) tecla_pre = 4'b1111; //F //***
+                    else if (col_3 != 4'b0) tecla_pre = 4'b1101; //D
+                    else estado_sig = E0;
+                end
+                else if (tecla_pre != 4'b1111)begin
+                    if ()
+                end
+
+                else begin 
+                    estado_sig = E0;
+                end
+            end
+
+            E1: begin
+
+            end
+
+            E2: begin
+
+            end
+
+            E3: begin
+
+            end
+            
+            E4: begin
+
+            end
+            default: estado_sig = E0;
+
+        endcase
+    end
+endmodule
+
+
+
+
+
+
+
+
+
+
 //Contador de anillo filas
 //******************************
 //******************************
@@ -231,33 +371,35 @@ module FF_D_habilitador(
 endmodule 
 
 
-//Almacenamiento
+///Almacenamiento
 //**********************************
 //**********************************
 module almacenamiento(
     input logic clk,
     input logic rst,
     input logic almac,
-    input logic [3:0] num1_dec1,   // Primer número de 4 bits para numero1
-    input logic [3:0] num1_dec2,   // Segundo número de 4 bits para numero1
-    input logic [3:0] num2_dec1,   // Primer número de 4 bits para numero2
-    input logic [3:0] num2_dec2,   // Segundo número de 4 bits para numero2
-    output logic [11:0] num_result1,  // Resultado de la concatenación de num1
-    output logic [11:0] num_result2   // Resultado de la concatenación de num2
+    input logic [3:0] num1_dec1,   // Primer dígito de 4 bits para numero1
+    input logic [3:0] num1_dec2,   // Segundo dígito de 4 bits para numero1
+    input logic [3:0] num2_dec1,   // Primer dígito de 4 bits para numero2
+    input logic [3:0] num2_dec2,   // Segundo dígito de 4 bits para numero2
+    output logic [11:0] num_result1,  // Resultado de la concatenación de num1 en decimal
+    output logic [11:0] num_result2   // Resultado de la concatenación de num2 en decimal
 );
 
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
             num_result1 <= 12'b0;
             num_result2 <= 12'b0;
-        end else if (almac) begin
-            // Concatenar los números de 4 bits y almacenarlos
-            num_result1 <= {num1_dec1, num1_dec2}; // Concatenación de num1_dec1 y num1_dec2
-            num_result2 <= {num2_dec1, num2_dec2}; // Concatenación de num2_dec1 y num2_dec2
+        end 
+        else if (almac) begin
+            // Convertir los dígitos en un número de dos dígitos decimales
+            num_result1 <= (num1_dec1 * 10) + num1_dec2; // Formar el número decimal num1
+            num_result2 <= (num2_dec1 * 10) + num2_dec2; // Formar el número decimal num2
         end
     end
 
 endmodule
+
 
 
 //Separador de numeros
@@ -304,6 +446,7 @@ endmodule
 //**************************************
 //**************************************
 `timescale 1ns / 1ps
+
 module display (
     input logic clk,
     output logic [6:0] Seg,

@@ -2,7 +2,7 @@
 
 module almacenamiento_tb;
 
-    // Entradas del módulo
+    // Señales de entrada
     logic clk;
     logic rst;
     logic almac;
@@ -11,11 +11,11 @@ module almacenamiento_tb;
     logic [3:0] num2_dec1;
     logic [3:0] num2_dec2;
 
-    // Salidas del módulo
+    // Señales de salida
     logic [11:0] num_result1;
     logic [11:0] num_result2;
 
-    // Instancia del módulo
+    // Instancia del módulo almacenamiento
     almacenamiento uut (
         .clk(clk),
         .rst(rst),
@@ -28,44 +28,54 @@ module almacenamiento_tb;
         .num_result2(num_result2)
     );
 
-    // Generador de reloj
-    always begin
-        #5 clk = ~clk;  // Genera un reloj con periodo de 10 unidades de tiempo
-    end
+    // Generación de reloj
+    always #5 clk = ~clk;
 
     // Estímulos de prueba
     initial begin
-        // Inicialización de señales
+        // Inicialización
         clk = 0;
-        rst = 0;
+        rst = 1;
         almac = 0;
         num1_dec1 = 4'b0000;
         num1_dec2 = 4'b0000;
         num2_dec1 = 4'b0000;
         num2_dec2 = 4'b0000;
 
-        // Aplicar reset
-        rst = 1;
-        #10;
-        rst = 0;
+        // Reset
+        #10 rst = 0;
 
-        // Activar la señal de almacenar y probar con diferentes combinaciones de entradas
-        almac = 1;
+        // Probar primer conjunto de números (ejemplo: 8 y 4)
+        #10 almac = 1;
+        num1_dec1 = 4'b1000; // 8
+        num1_dec2 = 4'b0100; // 4
+        num2_dec1 = 4'b0011; // 3
+        num2_dec2 = 4'b0101; // 5
 
-        // Primer ciclo de almacenamiento: 4 y 7 concatenados como 47
-        num1_dec1 = 4'b0100; num1_dec2 = 4'b0111; // 47 en decimal
-        num2_dec1 = 4'b0000; num2_dec2 = 4'b0000; // 0 en decimal
-        #10;
+        #10 almac = 0;
 
-        // Segundo ciclo de almacenamiento: 8 y 3 concatenados como 83
-        num1_dec1 = 4'b0000; num1_dec2 = 4'b0000; // 0 en decimal
-        num2_dec1 = 4'b1000; num2_dec2 = 4'b0011; // 83 en decimal
-        #10;
+        // Espera para observación
+        #50;
 
-        // Finalizar la simulación
-        $finish;
+        // Probar segundo conjunto de números (ejemplo: 1 y 2, 6 y 7)
+        #10 almac = 1;
+        num1_dec1 = 4'b0001; // 1
+        num1_dec2 = 4'b0010; // 2
+        num2_dec1 = 4'b0110; // 6
+        num2_dec2 = 4'b0111; // 7
+
+        #10 almac = 0;
+
+        // Fin de simulación
+        #50 $finish;
     end
 
+    // Monitor para ver los resultados
+    initial begin
+        $monitor("Time=%0t | num_result1=%0d | num_result2=%0d", $time, num_result1, num_result2);
+    end
+
+    // Generación de archivo de ondas
     initial begin
         $dumpfile("almacenamiento_tb.vcd");
         $dumpvars(0, almacenamiento_tb);
