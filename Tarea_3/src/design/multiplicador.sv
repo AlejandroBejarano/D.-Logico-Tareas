@@ -12,7 +12,7 @@ module control (
     input logic col_0, 
     input logic col_1, 
     input logic col_2, 
-    input logic col_3
+    input logic col_3,
 
     //Salidas
     output logic [6:0] seg,
@@ -29,7 +29,7 @@ module control (
     logic[15:0] bcd_out;   
 
     logic [13:0] numero;
-    logic [3:0] unidades,
+    logic [3:0] unidades;
     logic [3:0] decenas;
     logic [3:0] centenas;
     logic [3:0] millares;
@@ -116,7 +116,7 @@ module control (
 
 
     display inst_displ (
-        .result(result)
+        .result(result),
         .clk(clk),
         .Seg(Seg),
         .anodes(An), 
@@ -137,22 +137,21 @@ module control (
         .dec(decenas),
         .cen(centenas),
         .mill(millares)
-|   );
+    );
 
     codificador_bcd inst_codificador(
         .clk(clk),
         .binary_in(binary_in),
         .bcd_out(bcd_out)
-
     );
 
-    module SumaAri (
+    SumaAri inst_sum(
         .clk(clk),
         .rst(rst),
         .num1(num1),
         .num2(num2),
         .sum(sum)  
-);
+    );
 
     //FSM
     //******************* 
@@ -343,14 +342,14 @@ module control (
             
             E4: begin
                 if (tecla_cont == 3'b110 && tecla_opera == 4'b1011 ) begin 
-                    start == 1'b1;
-                    if (star == 1) begin
-                        A <= num_result1
-                        B <= num_result2
+                    start = 1'b1;
+                    if (start == 1) begin
+                        A <= num_result1;
+                        B <= num_result2;
                     end
                     else if (done == 1) begin
-                    binary_in <= resultado
-                    result <= bcd_out
+                        binary_in <= resultado;
+                        result <= bcd_out;
                         seg[0] = Seg[0];
                         seg[1] = Seg[1];
                         seg[2] = Seg[2];
@@ -737,10 +736,10 @@ endmodule
 `timescale 1ns / 1ps
 
 module display (
-    input logic [15:0] result
+    input logic [15:0] result,
     input logic clk,
     output logic [6:0] Seg,
-    output logic [3:0] anodes,
+    output logic [3:0] anodes
 );
 
     logic [6:0] number;
