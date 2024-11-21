@@ -429,14 +429,12 @@ module anillo_ctdr // Tamaño del contador: 4 bits
     input logic rst,   // Reset activo en bajo
     output logic [3:0] fila // Salida del contador
 );
-
 always_ff @(posedge clk or negedge rst) begin
     if (!rst) 
         fila <= 4'b0001; // Se inicializa encendiendo el primer bit
     else 
         fila <= {fila[2:0], fila[3]}; // Rotación de los bits (shift circular)
 end
-
 endmodule
 
 
@@ -623,7 +621,6 @@ module rebote(
     output logic boton_sal
 ); 
     logic clk_hab;
-    //Salidas de FF D, Q2_com es el complemento.
     logic q1, q2, q2_com, q0;
 
     divisor clk_ha( clk, clk_hab);
@@ -633,11 +630,8 @@ module rebote(
     FF_D_habilitador ff3(clk, clk_hab, q1, q2);
 
     assign q2_com = ~q2;
-    assign boton_sal = q1 & q2_com; //AND para salida
+    assign boton_sal = q1 & q2_com; 
 endmodule
-
-
-//FF_D se actualiza cuando clk_hab esta en alto.
 module FF_D_habilitador(
     input logic clk, 
     input logic clk_hab,
