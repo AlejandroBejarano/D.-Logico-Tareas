@@ -6,8 +6,15 @@
 // C es resultado (igual)
 // D (eliminar extra)
 
+
+//problemas
+//Filas no se encienden
+//almac
+//filas
+
 module control (
     //entradas
+    input logic rst,
     input logic clk,
     input logic col_0, 
     input logic col_1, 
@@ -17,26 +24,24 @@ module control (
     //Salidas
     output logic [6:0] seg,
     output logic [3:0] an,
-    input logic [3:0]fila
+    output logic [3:0]fila
 );
 
     //Variables temporales
     //-----------------
-    logic rst;
-    
+
     //Separador y BCD
     logic [15:0] binary_in; 
-    logic[15:0] bcd_out;   
-    
+    logic[15:0] bcd_out;
+
     //Rebote
     logic col0;
     logic col1;
     logic col2;
-    logic col3;
+    logic col3;   
 
     //Divisor de clk
     logic clk_div;
-
 
     //teclado
     logic [3:0]tecla_pre;
@@ -54,15 +59,14 @@ module control (
     logic [6:0] Seg;
 
     //Almacenamiento
-    logic almac1;
-    logic almac2;
+    logic almac;
     logic [3:0] num1_dec1;
     logic [3:0] num1_dec2;
     logic [3:0] num2_dec1;
     logic [3:0] num2_dec2;
     logic [11:0] num_result1;
     logic [11:0] num_result2;
-    
+
     //operacion
     logic [3:0] tecla_opera;
 
@@ -73,15 +77,12 @@ module control (
     logic [15:0] resultado;
     logic done;
 
-
     //Suma
     logic sum;
 
+
     //Instancias
     ///*************
-
-    
-
     anillo_ctdr insta_cont_anillo1 (
         .clk(clk),
         .rst(rst),
@@ -93,7 +94,6 @@ module control (
         .boton(col_0), 
         .boton_sal(col0)
     );
-
     
     rebote insta_reb_col1 (
         .clk(clk),
@@ -112,7 +112,7 @@ module control (
         .boton(col_3), 
         .boton_sal(col3)
     );
-    
+
     cont_tecla inst_tecla_cont(
         .clk(clk),
         .rst(rst),
@@ -130,8 +130,7 @@ module control (
     almacenamiento inst_alma(
         .clk(clk),
         .rst(rst),
-        .almac1(almac1), //variable 1 o 0
-        .almac2(almac2),
+        .almac(almac), //variable 1 o 0
         .num1_dec1(num1_dec1), 
         .num1_dec2(num1_dec2),  
         .num2_dec1(num2_dec1),   
@@ -145,8 +144,9 @@ module control (
         .result(result),
         .clk(clk),
         .Seg(Seg),
-        .anodes(An) 
+        .anodes(An)
     );
+
 
     multiplicador inst_mult(
         .A(num1), 
@@ -156,6 +156,8 @@ module control (
         .resultado(resultado), 
         .done(done)
     );
+
+
     codificador_bcd inst_codificador(
         .clk(clk),
         .binary_in(binary_in),
@@ -163,11 +165,11 @@ module control (
     );
 
     //SumaAri inst_sum(
-    //    .clk(clk),
-     //   .rst(rst),
-      //  .num1(num1),
-      //  .num2(num2),
-      //  .sum(sum)  
+     //   .clk(clk),
+    //    .rst(rst),
+    //    .num1(num1),
+     //   .num2(num2),
+     //   .sum(sum)  
     //);
 
     //FSM
@@ -193,8 +195,8 @@ module control (
     //Logica de cada estado
     always_ff @(posedge clk) begin
         estado_sig = estado_act;
-        //tecla_pre = 4'bxxxx;
         case(estado_act)
+
             E0: begin
                 if(fila == 4'b0001) begin
                     if (col0 != 4'b0) tecla_pre = 4'b0001; //1
@@ -235,7 +237,8 @@ module control (
             //Decenas
             E1: begin
                 if (tecla_cont == 3'b001) begin
-                        tecla <= tecla_pre;
+                    tecla <= tecla_pre;
+                    if (almac == 1) begin 
                         num1_dec1 <= tecla;
                         result <= num1_dec1;
                         seg[0] = Seg[0];
@@ -249,9 +252,12 @@ module control (
                         an[1] = An[1];
                         an[2] = An[2];
                         an[3] = An[3]; 
+                    end
+                    almac <= 1'b1;
                 end 
                 else if (tecla_cont == 3'b100) begin 
-                        tecla <= tecla_pre;
+                    tecla <= tecla_pre;
+                    if (almac == 1) begin
                         num2_dec1 <= tecla;
                         result <= num2_dec1;
                         seg[0] = Seg[0];
@@ -265,16 +271,21 @@ module control (
                         an[1] = An[1];
                         an[2] = An[2];
                         an[3] = An[3]; 
-                end 
-                else begin 
-                    estado_sig = E0;
                     end
+                    almac <= 1'b1;
+                end
+                    else begin 
+                    estado_sig = E0;
+                end
             end
-        
+
         // Unidades
             E2: begin
                 if (tecla_cont == 3'b010) begin
                     tecla <= tecla_pre;
+                    almac <= 1'b1;
+
+                    if (almac == 1) begin 
                         num1_dec2 <= tecla;
                         result <= num1_dec2;
                         seg[0] = Seg[0];
@@ -288,9 +299,13 @@ module control (
                         an[1] = An[1];
                         an[2] = An[2];
                         an[3] = An[3]; 
+                    end   
                 end 
                 else if (tecla_cont == 3'b100) begin 
                     tecla <= tecla_pre;
+                    almac <= 1'b1;
+
+                    if (almac ==1) begin
                         num2_dec2 <= tecla_pre;
                         result <= num2_dec2;
                         seg[0] = Seg[0];
@@ -304,6 +319,7 @@ module control (
                         an[1] = An[1];
                         an[2] = An[2];
                         an[3] = An[3]; 
+                    end 
                 end 
                 else begin 
                     estado_sig = E0;
@@ -343,15 +359,22 @@ module control (
                     estado_sig = E0;
                 end
             end
-            
+
             E4: begin
                 if (tecla_cont == 3'b110 && tecla_opera == 4'b1011 ) begin 
                     start = 1'b1;
                     if (start == 1) begin
                         num1 <= num_result1;
                         num2 <= num_result2;
+                        start = 1'b1;
+                    end
+                    if (start == 1) begin
+                        num1 <= num_result1;
+                        num2 <= num_result2;
                     end
                     else if (done == 1) begin
+                        binary_in <= resultado;
+                        result <= bcd_out;
                         binary_in <= resultado;
                         result <= bcd_out;
                         seg[0] = Seg[0];
@@ -366,14 +389,11 @@ module control (
                         an[2] = An[2];
                         an[3] = An[3]; 
                     end 
-                end 
-                else if (tecla_opera != 4'b1010) estado_sig = E0;
                 else begin
                     estado_sig = E0;
                 end
-            end
-            
-            default: estado_sig = E0;
+                end
+            end 
             E5: begin
                 if (tecla_opera == 4'b1010) begin
                     if (num1 != 4'b0 && num2 != 4'b0) begin
@@ -566,6 +586,8 @@ module detector_columna (
 
 endmodule
 
+
+
 // divisor de clk
 //*******************************
 //*******************************
@@ -660,14 +682,17 @@ end
 endmodule
 
 
+
+
+
+
 ///Almacenamiento
 //**********************************
 //**********************************
 module almacenamiento(
     input logic clk,
     input logic rst,
-    input logic almac1,
-    input logic almac2,
+    input logic almac,
     input logic [3:0] num1_dec1,   // Primer dígito de 4 bits para numero1
     input logic [3:0] num1_dec2,   // Segundo dígito de 4 bits para numero1
     input logic [3:0] num2_dec1,   // Primer dígito de 4 bits para numero2
@@ -678,22 +703,59 @@ module almacenamiento(
 
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
-            // Resetear los resultados a 0 cuando rst está activo
             num_result1 <= 12'b0;
             num_result2 <= 12'b0;
         end 
-        else if (almac1) begin
-            // Calcular los números concatenados cuando almac está activo
+        else if (almac) begin
+            // Convertir los dígitos en un número de dos dígitos decimales
             num_result1 <= (num1_dec1 * 10) + num1_dec2; // Formar el número decimal num1
+            num_result2 <= (num2_dec1 * 10) + num2_dec2; // Formar el número decimal num2
         end
-         else if (almac2) begin
-            // Calcular los números concatenados cuando almac está activo
-            num_result1 <= (num1_dec1 * 10) + num1_dec2; // Formar el número decimal num2
-         end 
     end
 
 endmodule
 
+
+
+//Separador de numeros
+//*****************************************
+//*****************************************
+module separar_num (
+    input logic clk,
+    input logic [13:0] num,
+    output logic [3:0] uni, dec, cen, mill
+);
+
+logic [3:0] bcd_uni, bcd_dec, bcd_cen, bcd_mill;
+integer i;
+
+always_ff @(posedge clk) begin
+    // Inicializar todas las variables a 0
+    bcd_uni = 0;
+    bcd_dec = 0;
+    bcd_cen = 0;
+    bcd_mill = 0;
+
+    for (i = 13; i >= 0; i = i - 1) begin
+        // Revisar y ajustar cada grupo de 4 bits antes de desplazar
+        if (bcd_uni >= 5) bcd_uni = bcd_uni + 3;
+        if (bcd_dec >= 5) bcd_dec = bcd_dec + 3;
+        if (bcd_cen >= 5) bcd_cen = bcd_cen + 3;
+        if (bcd_mill >= 5) bcd_mill = bcd_mill + 3;
+
+        // Desplazamiento manualmente de los bits
+        bcd_mill = {bcd_mill[2:0], bcd_cen[3]};
+        bcd_cen = {bcd_cen[2:0], bcd_dec[3]};
+        bcd_dec = {bcd_dec[2:0], bcd_uni[3]};
+        bcd_uni = {bcd_uni[2:0], num[i]};
+    end
+end
+assign uni = bcd_uni;
+assign dec = bcd_dec;
+assign cen = bcd_cen;
+assign mill = bcd_mill;
+
+endmodule
 
 
 //Idea 7-seg
@@ -874,5 +936,97 @@ module SumaAri (
             sum <= num1 + num2; // Realizar la suma aritmética
         end
     end
+
+endmodule
+
+//********************************************
+//********************************************
+//Intento del modulo general
+module sistema_teclado_display (
+    input logic clk,           // Reloj del sistema
+    input logic rst,           // Señal de reset
+    input logic boton,         // Botón con debounce
+    input logic [3:0] col,     // Entradas de columnas del teclado matricial
+    output logic [6:0] seg,    // Segmentos del display
+    output logic [3:0] anodes  // Anodos del display de 7 segmentos
+);
+
+    // Señales internas
+    logic [3:0] tecla_pre;        // Tecla detectada (salida del detector de columnas)
+    logic menos, multiplicador, igual;  // Salidas para teclas especiales
+    logic [3:0] fila;             // Salida del contador de anillo (fila activa)
+    logic clk_div;                // Reloj dividido para el display
+    logic boton_sal;              // Botón con debounce
+    logic [11:0] num_result1, num_result2; // Números almacenados
+    logic [3:0] uni, dec, cen, mill;       // Dígitos separados en BCD
+    logic [15:0] result;          // Número a mostrar en el display
+
+    // Instancia del contador de anillo (controla las filas del teclado)
+    anillo_ctdr #(4) contador (
+        .clk(clk_div), 
+        .rst(rst), 
+        .fila(fila)
+    );
+
+    // Instancia del detector de columnas con FSM (detecta la tecla presionada)
+    detector_columna detector (
+        .clk(clk), 
+        .rst(rst), 
+        .fila(fila), 
+        .col_0(col[0]), 
+        .col_1(col[1]), 
+        .col_2(col[2]), 
+        .col_3(col[3]), 
+        .tecla_pre(tecla_pre), 
+        .menos(menos), 
+        .multiplicador(multiplicador), 
+        .igual(igual)
+    );
+
+    // Instancia del divisor de reloj para generar un reloj lento
+    divisor divisor_clk (
+        .clk(clk), 
+        .clk_div(clk_div)
+    );
+
+    // Instancia del módulo de rebote para el botón
+    rebote debounce (
+        .clk(clk), 
+        .boton(boton), 
+        .boton_sal(boton_sal)
+    );
+
+    // Instancia del módulo de almacenamiento (almacena los números ingresados)
+    almacenamiento almacen (
+        .clk(clk), 
+        .rst(rst), 
+        .almac(boton_sal), 
+        .num1_dec1(tecla_pre), 
+        .num1_dec2(4'b0000), // Puedes definir los valores específicos según el número
+        .num2_dec1(4'b0000), 
+        .num2_dec2(4'b0000), 
+        .num_result1(num_result1), 
+        .num_result2(num_result2)
+    );
+
+    // Instancia del separador de números para convertir un número de 16 bits en BCD
+    separar_num separador (
+        .num(result), 
+        .uni(uni), 
+        .dec(dec), 
+        .cen(cen), 
+        .mill(mill)
+    );
+
+    // Lógica para combinar los resultados de almacenamiento y mostrarlos en el display
+    assign result = {num_result1[7:0], num_result2[7:0]}; // Ajustar según el formato deseado
+
+    // Instancia del módulo de display de 7 segmentos
+    display controlador_display (
+        .clk(clk), 
+        .Seg(seg), 
+        .anodes(anodes), 
+        .result(result)
+    );
 
 endmodule

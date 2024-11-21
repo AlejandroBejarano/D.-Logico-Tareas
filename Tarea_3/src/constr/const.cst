@@ -38,3 +38,6 @@ IO_LOC  "col_0" 28;
 
 IO_LOC  "clk" 52;
 IO_PORT "clk" IO_TYPE=LVCMOS33 PULL_MODE=UP;
+
+IO_LOC  "rst" 3;
+IO_PORT "rst" IO_TYPE=LVCMOS18;

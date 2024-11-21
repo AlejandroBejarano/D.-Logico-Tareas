@@ -15,6 +15,7 @@ SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv 
 
 #Fuente de simulacion
 #aca va el testbench que quieran simular
+#testbench = ../sim/cont_anillo.sv
 #TESTBENCH = ../sim/anillo_cont.sv
 #TESTBENCH = ../sim/conca_tb.sv
 #TESTBENCH = ../sim/divisor_tb.sv
@@ -33,22 +34,18 @@ TESTBENCH = ../sim/control_tb.sv
 CONSTRAINTS = ../constr/const.cst
 
 #el top se indica sin la extension .v, esto hace referencia al nombre que le pusieron al módulo y no al archivo en si.
-TOP_DESIGN = control
-TOP_TB     = control_tb
 #TOP_DESIGN = almacenamiento
 #TOP_TB     = almacenamiento_tb
 #TOP_DESIGN = multiplicador
 #TOP_TB     = multiplicador_tb
 #TOP_DESIGN = detector_columna
 #TOP_TB     = detector_tb
-#TOP_DESIGN = anillo_ctdr
-#TOP_TB     = anillo_tb
+##TOP_TB     = anillo_tb
 #TOP_DESIGN = concatenar_num
 #TOP_TB = conca_tb
 #TOP_DESIGN = divisor
 #TOP_TB = divisor_tb
-#TOP_DESIGN = rebote
-#TOP_TB = rebote_tb
+##TOP_TB = rebote_tb
 #TOP_DESIGN = multiplicador
 #TOP_TB = multiplicador_tb
 #TOP_DESIGN = separar_num
@@ -57,6 +54,8 @@ TOP_TB     = control_tb
 #TOP_TB = display_tb
 #TOP_DESIGN = codificador_bcd
 #TOP_TB = codificador_bcd_tb
+TOP_DESIGN = control
+TOP_TB = control_tb
 
 
 #nombre del vcd que va a generar el tb
@@ -71,7 +70,7 @@ TOP_TB     = control_tb
 #VCD_FILE = multiplicador_tb.vcd
 #VCD_FILE = almacenamiento_tb.vcd
 #VCD_FILE = codificador_bcd_tb.vcd
-VCD_FILE = control_tb.vcd
+VCD_FILE = module_control_tb.vcd
 
 
 all: synth pnr bitstream load

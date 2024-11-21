@@ -13,7 +13,7 @@ anillo_ctdr anillo_inst_tb(
     .fila(fila)
 );
 
-always #18.5 clk = ~clk;
+always #500 clk = ~clk;
 
 initial begin
 
@@ -23,6 +23,7 @@ initial begin
     repeat (2) @(posedge clk);
     rst <= 1;
     repeat (15) @(posedge clk);
+    #10000;
     $finish;
 end
 
