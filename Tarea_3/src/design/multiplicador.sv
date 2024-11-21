@@ -80,14 +80,12 @@ module control (
     //Suma
     logic sum;
 
-
-    //Instancias
-    ///*************
-    anillo_ctdr insta_cont_anillo1 (
-        .clk(clk),
-        .rst(rst),
-        .fila(fila)
-    );
+    always_ff @(posedge clk or negedge rst) begin
+    if (!rst) 
+        fila <= 4'b0001; // Se inicializa encendiendo el primer bit
+    else 
+        fila <= {fila[2:0], fila[3]};
+    end
 
     rebote insta_reb_col0 (
         .clk(clk),
@@ -425,24 +423,22 @@ endmodule
 //Contador de anillo filas
 //******************************
 //******************************
-module anillo_ctdr #(parameter WIDTH = 4) //Se define el tamano del contador 4.
+module anillo_ctdr // Tamaño del contador: 4 bits
 (
-    input clk,
-    input rst,
-    output reg [WIDTH-1:0] fila
+    input logic clk,   // Reloj
+    input logic rst,   // Reset activo en bajo
+    output logic [3:0] fila // Salida del contador
 );
 
-always_ff @(posedge clk) begin
-    if (!rst)
-        fila <=1; //Se inicializa encendiendo el primer bit.
-    else begin
-        fila[WIDTH-1] <= fila[0];
-        for (int i = 0; i < WIDTH-1; i=i+1 ) begin  //Es un shifter
-            fila[i] <= fila[i+1];
-        end
-    end
+always_ff @(posedge clk or negedge rst) begin
+    if (!rst) 
+        fila <= 4'b0001; // Se inicializa encendiendo el primer bit
+    else 
+        fila <= {fila[2:0], fila[3]}; // Rotación de los bits (shift circular)
 end
+
 endmodule
+
 
 
 //Detector de teclas con FSM.
