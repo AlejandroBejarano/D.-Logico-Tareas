@@ -673,9 +673,6 @@ endmodule
 
 
 
-
-
-
 ///Almacenamiento
 //**********************************
 //**********************************
@@ -702,7 +699,6 @@ module almacenamiento(
             num_result2 <= (num2_dec1 * 10) + num2_dec2; // Formar el número decimal num2
         end
     end
-
 endmodule
 
 

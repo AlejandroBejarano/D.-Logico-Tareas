@@ -63,7 +63,5 @@ module multiplicador_tb();
         $dumpfile("multiplicador_tb.vcd");
         $dumpvars(0, multiplicador_tb);
     end
-
-
 endmodule
 

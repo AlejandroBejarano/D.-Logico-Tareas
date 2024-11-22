@@ -89,6 +89,4 @@ module control_tb;
         $dumpvars(0, control_tb);
     end
 
-
-
 endmodule

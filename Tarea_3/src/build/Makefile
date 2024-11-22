@@ -27,7 +27,10 @@ SOURCES := $(wildcard ../design/*.v ../design/*.sv) #Todas las fuentes .v o .sv 
 #TESTBENCH = ../sim/multiplicador_tb.sv
 #TESTBENCH = ../sim/almacenamiento_tb.sv
 #TESTBENCH = ../sim/codificador_bcd_tb.sv
-TESTBENCH = ../sim/control_tb.sv
+#TESTBENCH = ../sim/control_tb.sv
+TESTBENCH = ../sim/cont_tecla_tb.sv
+
+
 
 # Constraints para el proyecto
 #aca va el archivo de constraints del proyecto
@@ -54,8 +57,10 @@ CONSTRAINTS = ../constr/const.cst
 #TOP_TB = display_tb
 #TOP_DESIGN = codificador_bcd
 #TOP_TB = codificador_bcd_tb
-TOP_DESIGN = control
-TOP_TB = control_tb
+#TOP_DESIGN = control
+#TOP_TB = control_tb
+TOP_DESIGN = cont_tecla
+TOP_TB = cont_tecla_tb
 
 
 #nombre del vcd que va a generar el tb
@@ -70,7 +75,8 @@ TOP_TB = control_tb
 #VCD_FILE = multiplicador_tb.vcd
 #VCD_FILE = almacenamiento_tb.vcd
 #VCD_FILE = codificador_bcd_tb.vcd
-VCD_FILE = module_control_tb.vcd
+#VCD_FILE = module_control_tb.vcd
+VCD_FILE = cont_tecla_tb.vcd
 
 
 all: synth pnr bitstream load

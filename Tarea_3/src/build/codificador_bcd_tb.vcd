@@ -1,5 +1,5 @@
 $date
-	Mon Nov 18 04:15:42 2024
+	Fri Nov 22 07:46:16 2024
 $end
 $version
 	Icarus Verilog
@@ -17,7 +17,7 @@ $var wire 1 # clk $end
 $var reg 16 % bcd_out [15:0] $end
 $var reg 32 & shift_reg [31:0] $end
 $var integer 32 ' state [31:0] $end
-$scope begin $ivl_for_loop1 $end
+$scope begin $ivl_for_loop0 $end
 $var integer 32 ( j [31:0] $end
 $upscope $end
 $upscope $end
