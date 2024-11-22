@@ -522,7 +522,8 @@ endmodule
 ```
 La inicialización pasa cuando la señal start se activa en 1 se inicializan las variables internas y en busy hace que el modulo entre en un estado ocupado. Durante el proseso de la multiplicación durante cada ciclo de reloj si contado es menor que el valor de multiplicaodor (B) el valor del multiplicando (A) se le suma al acumulador y el contador se incrementa en 1 y finaliza cuando el contador alcanza el valor de multiplicador (B) y el dato en acumulador se tranfiere a resultado, la señal done se activa y se desactiva el busy.
 
-![multiplicador](Imagenes/multiplicador_WV.png)
+
+![multiplicador](Imagenes/multiplicador.png)
  
  En la figura enterior se muestra como la señal del busy y start se activan al inicio, se realiza la multiplicacion cuando termina se desactiva el busy y sale el resultado
 
@@ -569,7 +570,7 @@ endmodule
 La funcionalidad del modulo esta dentro del almays_ff sensible al flanco positivo del reloj posedge clk y el flanco positivo posedg rst. 
 Inicia con el rst reiniciando y cuando se desactiva verifia se almac esta activado convirtiendo a un número decimal completo multiplicando el primer dígito (num1_dec1 o num2_dec1) por 10 y sumando el segundo dígito (num1_dec2 o num2_dec2). El resultado se almacena en las salidas num_result1 y num_result2. Por ultimo almac se desactiva y termina el módulo.
 
-![almacenamiento](Imagenes/almacenamiento_WV.png)
+![almacenamiento](Imagenes/almacenamiento.png)
 
 #### Display
 
@@ -662,7 +663,7 @@ endmodule
 ```
 El módulo utiliza un contador para reducir la frecuencia del reloj (clk) y generar un slow_clock, que se utiliza para alternar entre los dígitos del display, despues un bloque always_ff se ejecuta en cada flanco positivo de slow_clock para alternar entre los dígitos y determinar qué parte del número (data) se debe mostrar y para mostralo el dígito actual (dig) se convierte en un patrón de 7 segmentos para el display usando un case para cada numero del 0 al F, sin embargo para este proyecto solo que ocupaba del 0 al 9 y finalmente, el valor calculado en number se asigna a Seg para mostrar el dígito correspondiente.
 
-![display](Imagenes/display_WV.png)
+![display](Imagenes/display.png)
 
 #### Codificador BCD
 
@@ -706,7 +707,7 @@ endmodule
 ```
 El módulo inicia en state cero con el binary_in en cero y para el convertir el número se utiliza el proceso de conversio Double Dabble donde son 16 estados desplazar el bit más significativo del binario hacia los dígitos BCD, despues ajustar los valores en los dígitos BCD si son mayores o iguales a 5 y por último lo repetir hasta procesar los 16 bits.
 
-![codificador_bcd](Imagenes/codificador_bcd_WV.png)
+![codificador_bcd](Imagenes/codificador_bcd.png)
 
 
 
