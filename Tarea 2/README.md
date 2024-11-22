@@ -1447,6 +1447,6 @@ module SumaAri_tb;
         $monitor("Time: %0t | num1: %0d | num2: %0d | sum: %0d", $time, num1, num2, sum);
     end
 endmodule
-```
+
 El testbench (SumaAri_tb) se utiliza para simular y verificar el correcto funcionamiento del módulo SumaAri. Este genera estímulos de entrada, controla el reloj y el reset, y muestra el resultado de la operación de suma para diferentes valores de num1 y num2.
 
